@@ -31,7 +31,7 @@ void CursorPosition(int, int);
 
 class Property
 {
-// Node for CDLL
+    // Node for CDLL
 public:
     long long int propertyID;
     long int locationID;
@@ -59,172 +59,24 @@ public:
     Property *next;
     Property *prev;
 
-    Property(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price,  string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency)
-    {
-        this->propertyID = propertyID;
-        this->locationID = locationID;
-        this->pageUrl = pageUrl;
-        this->propertyType = propertyType;
-        this->price = price;
-        this->priceType = priceType;
-        this->location = location;
-        this->city = city;
-        this->province = province;
-        this->locality = locality;
-        this->latitude = latitude;
-        this->longitude = longitude;
-        this->baths = baths;
-        this->area = area;
-        this->areaMarla = areaMarla;
-        this->areaSqft = areaSqft;
-        this->purpose = purpose;
-        this->bedrooms = bedrooms;
-        this->dateAdded = dateAdded;
-        this->year = year;
-        this->month = month;
-        this->day = day;
-        this->agency = agency;
-        next = prev = NULL;
-    }
-
-    void print()
-    {
-        cout << propertyID << "  " << locationID << "  " << pageUrl << "  " << propertyType << "  " << price << "  " << priceType << "  " << location << "  " << city << "  " << province << "  " << locality << "  " << latitude << "  " << longitude << "  " << baths << "  " << area << "  " << areaMarla << "  " << areaSqft << "  " << purpose << "  " << bedrooms << "  " << dateAdded << "  " << year << "  " << month << "  " << day << "  " << agency << "  " << endl;
-    }
+    Property(long long int, long int, string, string, long long int, string, string, string, string, string, long double, long double, int, string, float, long double, string, int, string, int, int, int, string);
+    void print();
 };
 
-class Properties{
+class Properties
+{
     // SDLL
-    private:
-        Property *head;
-        Property *tail;
-    public:
-        Properties(){
-            head = tail = NULL;
-        }
+private:
+    Property *head;
+    Property *tail;
 
-        bool isEmpty(){
-            if(head == NULL && tail == NULL){
-                return true;
-            }else{
-                return false;
-            }
-        }
-
-        void append(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price,  string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency){
-            Property *n = new Property(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency);
-            if(isEmpty()){
-                head = tail = n;
-            }else{
-                n->next = head;
-                n->prev = tail;
-                tail->next = n;
-                head->prev = n;
-                tail = n;
-            }
-        }
-
-        void print(){
-            if(isEmpty()){
-                cout << "No properties" << endl;
-            }else{
-                Property *temp = head;
-                do{
-                    temp->print();
-                    temp = temp->next;
-                }while(temp != head);
-            }
-        }
-
-        int count(){
-            int count = 0;
-            if(!isEmpty()){
-                Property *temp = head;
-                do{
-                    count++;
-                    temp = temp->next;
-                }while(temp != head);
-            }
-        }
-
-        void readCSV()
-        {
-            long long int propertyID;
-            long int locationID;
-            string pageUrl;
-            string propertyType;
-            long long int price;
-            string priceType;
-            string location;
-            string city;
-            string province;
-            string locality;
-            long double latitude;
-            long double longitude;
-            int baths;
-            string area;
-            float areaMarla;
-            long double areaSqft;
-            string purpose;
-            int bedrooms;
-            string dateAdded;
-            int year;
-            int month;
-            int day;
-            string agency;
-
-            string fname = "./data/property.csv";
-            vector<vector<string> > content;
-            vector<string> row;
-            string line, word;
-
-            fstream file(fname.c_str(), ios::in);
-            if (file.is_open())
-            {
-                while (getline(file, line))
-                {
-                    row.clear();
-
-                    stringstream str(line);
-
-                    while (getline(str, word, ','))
-                        row.push_back(word);
-                    content.push_back(row);
-                }
-            }
-            else
-                cout << "Could not open the file\n";
-
-            for (int i = 0; i < content.size(); i++)
-            {
-                propertyID = stoll(content[i][0]);
-                locationID = stol(content[i][1]);
-                pageUrl = content[i][2];
-                propertyType = content[i][3];
-                price = stoi(content[i][4]);
-                priceType = content[i][5];
-                location = content[i][6];
-                city = content[i][7];
-                province = content[i][8];
-                locality = content[i][9];
-                locality += content[i][10];
-                locality += content[i][11];
-                latitude = stold(content[i][12]);
-                longitude = stoi(content[i][13]);
-                baths = stoi(content[i][14]);
-                area = content[i][15];
-                areaMarla = stof(content[i][16]);
-                areaSqft = stold(content[i][17]);
-                purpose = content[i][18];
-                bedrooms = stoi(content[i][19]);
-                dateAdded = content[i][20];
-                year = stoi(content[i][21]);
-                month = stoi(content[i][22]);
-                day = stoi(content[i][23]);
-                agency = content[i][24];
-                append(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency);
-            }
-        }
+public:
+    Properties();
+    bool isEmpty();
+    void append(long long int, long int, string, string, long long int, string, string, string, string, string, long double, long double, int, string, float, long double, string, int, string, int, int, int, string);
+    void print();
+    int count();
+    void readCSV();
 };
 
 int main()
@@ -264,7 +116,7 @@ int main()
         case 5:
             system("cls");
             system("title About Us");
-            // aboutUs();
+            aboutUs();
             break;
         case 6:
             system("cls");
@@ -361,40 +213,44 @@ void currentDateAndTime()
     cout << ctime(&t);
 }
 
-void FontSize(int x, int y){
+void FontSize(int x, int y)
+{
 
-CONSOLE_FONT_INFOEX cfi;
-cfi.cbSize = sizeof(cfi);
-cfi.nFont = 0;
-cfi.dwFontSize.X = x;                   // Width of each character in the font
-cfi.dwFontSize.Y = y;                  // Height
-cfi.FontFamily = FF_DONTCARE;
-cfi.FontWeight = 700;                   //For normal: FW_NORMAL
-std::wcscpy(cfi.FaceName, L"Courier"); // Choose your font
-SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+    CONSOLE_FONT_INFOEX cfi;
+    cfi.cbSize = sizeof(cfi);
+    cfi.nFont = 0;
+    cfi.dwFontSize.X = x; // Width of each character in the font
+    cfi.dwFontSize.Y = y; // Height
+    cfi.FontFamily = FF_DONTCARE;
+    cfi.FontWeight = 700;                  // For normal: FW_NORMAL
+    std::wcscpy(cfi.FaceName, L"Courier"); // Choose your font
+    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 }
 
-void box(){
-	CursorPosition(40,7);
-	TextColor(1);
-	for(int i=0;i<40;i++)
-	    cout<<"-";
+void box()
+{
+    CursorPosition(40, 7);
+    TextColor(1);
+    for (int i = 0; i < 40; i++)
+        cout << "-";
     TextColor(2);
-    CursorPosition(44,13);
-	cout<<"ThankYou for using Our Service:)";
-	TextColor(1);
-	for(int i=0;i<11;i++){
-		CursorPosition(39,8+i);
-	    cout<<"|\n";
-	}
-	CursorPosition(40,19);
-	for(int i=0;i<40;i++)
-	   cout<<"-";
-	for(int i=0;i<11;i++){
-	CursorPosition(80,8+i);
-    cout<<"|\n";
-	}
-	cout<<endl;
+    CursorPosition(44, 13);
+    cout << "ThankYou for using Our Service:)";
+    TextColor(1);
+    for (int i = 0; i < 11; i++)
+    {
+        CursorPosition(39, 8 + i);
+        cout << "|\n";
+    }
+    CursorPosition(40, 19);
+    for (int i = 0; i < 40; i++)
+        cout << "-";
+    for (int i = 0; i < 11; i++)
+    {
+        CursorPosition(80, 8 + i);
+        cout << "|\n";
+    }
+    cout << endl;
 }
 
 int mainMenu()
@@ -408,7 +264,7 @@ int mainMenu()
     TextColor(10);
     currentDateAndTime();
     CursorPosition(32, 3);
-    FontSize(0,21);
+    FontSize(0, 21);
     TextColor(11);
     cout << "\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2 FAST-NUCES BANK \xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2";
     for (i = 1; i <= 8; i++)
@@ -445,15 +301,21 @@ int mainMenu()
     cout << "Enter your choice: ";
     fflush(stdin);
     i = 0;
-    while(1){
+    while (1)
+    {
         ch = getch();
-        if(ch >= '1' && ch <= '7' && i == 0){
+        if (ch >= '1' && ch <= '7' && i == 0)
+        {
             cout << ch;
             choice = ch - '0';
             i++;
-        }else if(ch == 13 && i == 1){
+        }
+        else if (ch == 13 && i == 1)
+        {
             break;
-        }else if(ch == 8 && i != 0){
+        }
+        else if (ch == 8 && i != 0)
+        {
             i--;
             cout << "\b \b";
         }
@@ -461,7 +323,8 @@ int mainMenu()
     return choice;
 }
 
-void aboutUs(){
+void aboutUs()
+{
     system("cls");
     int j;
     for (j = 21; j >= 0; j--)
@@ -556,10 +419,191 @@ void aboutUs(){
         CursorPosition(46, j + 1);
         printf("Sufiyaan Usmani  (21K-3195)");
         CursorPosition(46, j + 2);
-        printf("Ahsan Ashraf     (21K-3186)");
+        printf("Yousuf Ahmed     (21K-4594)");
         CursorPosition(46, j + 3);
         printf("Qasim Hasan      (21K-3210)");
         CursorPosition(0, 0);
         Sleep(600);
+    }
+}
+
+// PROPERTY
+
+Property::Property(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price, string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency)
+{
+    this->propertyID = propertyID;
+    this->locationID = locationID;
+    this->pageUrl = pageUrl;
+    this->propertyType = propertyType;
+    this->price = price;
+    this->priceType = priceType;
+    this->location = location;
+    this->city = city;
+    this->province = province;
+    this->locality = locality;
+    this->latitude = latitude;
+    this->longitude = longitude;
+    this->baths = baths;
+    this->area = area;
+    this->areaMarla = areaMarla;
+    this->areaSqft = areaSqft;
+    this->purpose = purpose;
+    this->bedrooms = bedrooms;
+    this->dateAdded = dateAdded;
+    this->year = year;
+    this->month = month;
+    this->day = day;
+    this->agency = agency;
+    next = prev = NULL;
+}
+
+void Property::print()
+{
+    cout << propertyID << "  " << locationID << "  " << pageUrl << "  " << propertyType << "  " << price << "  " << priceType << "  " << location << "  " << city << "  " << province << "  " << locality << "  " << latitude << "  " << longitude << "  " << baths << "  " << area << "  " << areaMarla << "  " << areaSqft << "  " << purpose << "  " << bedrooms << "  " << dateAdded << "  " << year << "  " << month << "  " << day << "  " << agency << "  " << endl;
+}
+
+// PROPERTIES
+
+Properties::Properties()
+{
+    head = tail = NULL;
+}
+
+bool Properties::isEmpty()
+{
+    if (head == NULL && tail == NULL)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void Properties::append(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price, string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency)
+{
+    Property *n = new Property(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency);
+    if (isEmpty())
+    {
+        head = tail = n;
+    }
+    else
+    {
+        n->next = head;
+        n->prev = tail;
+        tail->next = n;
+        head->prev = n;
+        tail = n;
+    }
+}
+
+void Properties::print()
+{
+    if (isEmpty())
+    {
+        cout << "No properties" << endl;
+    }
+    else
+    {
+        Property *temp = head;
+        do
+        {
+            temp->print();
+            temp = temp->next;
+        } while (temp != head);
+    }
+}
+
+int Properties::count()
+{
+    int count = 0;
+    if (!isEmpty())
+    {
+        Property *temp = head;
+        do
+        {
+            count++;
+            temp = temp->next;
+        } while (temp != head);
+    }
+}
+
+void Properties::readCSV()
+{
+    long long int propertyID;
+    long int locationID;
+    string pageUrl;
+    string propertyType;
+    long long int price;
+    string priceType;
+    string location;
+    string city;
+    string province;
+    string locality;
+    long double latitude;
+    long double longitude;
+    int baths;
+    string area;
+    float areaMarla;
+    long double areaSqft;
+    string purpose;
+    int bedrooms;
+    string dateAdded;
+    int year;
+    int month;
+    int day;
+    string agency;
+
+    string fname = "./data/property.csv";
+    vector<vector<string> > content;
+    vector<string> row;
+    string line, word;
+
+    fstream file(fname.c_str(), ios::in);
+    if (file.is_open())
+    {
+        while (getline(file, line))
+        {
+            row.clear();
+
+            stringstream str(line);
+
+            while (getline(str, word, ','))
+                row.push_back(word);
+            content.push_back(row);
+        }
+    }
+    else
+        cout << "Could not open the file\n";
+
+    for (int i = 0; i < content.size(); i++)
+    {
+        propertyID = stoll(content[i][0]);
+        locationID = stol(content[i][1]);
+        pageUrl = content[i][2];
+        propertyType = content[i][3];
+        price = stoi(content[i][4]);
+        priceType = content[i][5];
+        location = content[i][6];
+        city = content[i][7];
+        province = content[i][8];
+        locality = content[i][9];
+        locality += content[i][10];
+        locality += content[i][11];
+        latitude = stold(content[i][12]);
+        longitude = stoi(content[i][13]);
+        baths = stoi(content[i][14]);
+        area = content[i][15];
+        areaMarla = stof(content[i][16]);
+        areaSqft = stold(content[i][17]);
+        purpose = content[i][18];
+        bedrooms = stoi(content[i][19]);
+        dateAdded = content[i][20];
+        year = stoi(content[i][21]);
+        month = stoi(content[i][22]);
+        day = stoi(content[i][23]);
+        agency = content[i][24];
+        append(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency);
     }
 }
