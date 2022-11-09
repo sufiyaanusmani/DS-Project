@@ -10,6 +10,9 @@
 #include <ctype.h>
 #include <iomanip>
 #include <cwchar>
+#include <vector>
+#include <sstream>
+#include <typeinfo>
 using namespace std;
 
 string convertToString(char *);
@@ -51,11 +54,46 @@ public:
     {
         cout << propertyID << "  " << locationID << "  " << convertToString(pageUrl) << "  " << convertToString(propertyType) << "  " << price << "  " << convertToString(priceType) << "  " << convertToString(location) << "  " << convertToString(city) << "  " << convertToString(province) << "  " << convertToString(locality) << "  " << latitude << "  " << longitude << "  " << baths << "  " << convertToString(area) << "  " << areaMarla << "  " << areaSqft << "  " << convertToString(purpose) << "  " << bedrooms << "  " << convertToString(dateAdded) << "  " << year << "  " << month << "  " << day << "  " << convertToString(agency) << "  " << convertToString(agent) << endl;
     }
+
+    void readCSV()
+    {
+        string fname = "./data/property.csv";
+        vector<vector<string> > content;
+        vector<string> row;
+        string line, word;
+
+        fstream file(fname.c_str(), ios::in);
+        if (file.is_open())
+        {
+            while (getline(file, line))
+            {
+                row.clear();
+
+                stringstream str(line);
+
+                while (getline(str, word, ','))
+                    row.push_back(word);
+                content.push_back(row);
+            }
+        }
+        else
+            cout << "Could not open the file\n";
+
+        for (int i = 0; i < content.size(); i++)
+        {
+            for (int j = 0; j < content[i].size(); j++)
+            {
+                cout << content[i][j] << " ";
+            }
+            cout << "\n";
+        }
+    }
 };
 
 int main()
 {
-
+    Property property;
+    property.convertCSVToObj();
     return 0;
 }
 
