@@ -577,7 +577,7 @@ void Properties::readCSV()
     else
         cout << "Could not open the file\n";
 
-    for (int i = 0; i < content.size(); i++)
+    for (int i = 1; i < content.size(); i++)
     {
         propertyID = stoll(content[i][0]);
         locationID = stol(content[i][1]);
