@@ -27,80 +27,187 @@ void CursorPosition(int, int);
 
 class Property
 {
-private:
+// Node for CDLL
+public:
     long long int propertyID;
     long int locationID;
-    char pageUrl;
-    char propertyType[20];
+    string pageUrl;
+    string propertyType;
     long long int price;
-    char priceType[20];
-    char location[50];
-    char city[20];
-    char province[20];
-    char locality[50];
+    string priceType;
+    string location;
+    string city;
+    string province;
+    string locality;
     long double latitude;
     long double longitude;
     int baths;
-    char area[20];
+    string area;
     float areaMarla;
     long double areaSqft;
-    char purpose[20];
+    string purpose;
     int bedrooms;
-    char dateAdded[20];
+    string dateAdded;
     int year;
     int month;
     int day;
-    char agency[50];
-    char agent[50];
+    string agency;
+    string agent;
+    Property *next;
+    Property *prev;
 
-public:
-    Property()
+    Property(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price,  string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency, string agent)
     {
+        this->propertyID = propertyID;
+        this->locationID = locationID;
+        this->pageUrl = pageUrl;
+        this->propertyType = propertyType;
+        this->price = price;
+        this->priceType = priceType;
+        this->location = location;
+        this->city = city;
+        this->province = province;
+        this->locality = locality;
+        this->latitude = latitude;
+        this->longitude = longitude;
+        this->baths = baths;
+        this->area = area;
+        this->areaMarla = areaMarla;
+        this->areaSqft = areaSqft;
+        this->purpose = purpose;
+        this->bedrooms = bedrooms;
+        this->dateAdded = dateAdded;
+        this->year = year;
+        this->month = month;
+        this->day = day;
+        this->agency = agency;
+        this->agent = agent;
+        next = prev = NULL;
     }
 
     void print()
     {
-        cout << propertyID << "  " << locationID << "  " << convertToString(pageUrl) << "  " << convertToString(propertyType) << "  " << price << "  " << convertToString(priceType) << "  " << convertToString(location) << "  " << convertToString(city) << "  " << convertToString(province) << "  " << convertToString(locality) << "  " << latitude << "  " << longitude << "  " << baths << "  " << convertToString(area) << "  " << areaMarla << "  " << areaSqft << "  " << convertToString(purpose) << "  " << bedrooms << "  " << convertToString(dateAdded) << "  " << year << "  " << month << "  " << day << "  " << convertToString(agency) << "  " << convertToString(agent) << endl;
+        cout << propertyID << "  " << locationID << "  " << pageUrl << "  " << propertyType << "  " << price << "  " << priceType << "  " << location << "  " << city << "  " << province << "  " << locality << "  " << latitude << "  " << longitude << "  " << baths << "  " << area << "  " << areaMarla << "  " << areaSqft << "  " << purpose << "  " << bedrooms << "  " << dateAdded << "  " << year << "  " << month << "  " << day << "  " << agency << "  " << agent << endl;
     }
+};
 
-    void readCSV()
-    {
-        string fname = "./data/property.csv";
-        vector<vector<string> > content;
-        vector<string> row;
-        string line, word;
+class Properties{
+    // SDLL
+    private:
+        Property *head;
+        Property *tail;
+    public:
+        Properties(){
+            head = tail = NULL;
+        }
 
-        fstream file(fname.c_str(), ios::in);
-        if (file.is_open())
-        {
-            while (getline(file, line))
-            {
-                row.clear();
-
-                stringstream str(line);
-
-                while (getline(str, word, ','))
-                    row.push_back(word);
-                content.push_back(row);
+        bool isEmpty(){
+            if(head == NULL && tail == NULL){
+                return true;
+            }else{
+                return false;
             }
         }
-        else
-            cout << "Could not open the file\n";
 
-        for (int i = 0; i < content.size(); i++)
-        {
-            for (int j = 0; j < content[i].size(); j++)
-            {
-                cout << content[i][j] << " ";
+        void append(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price,  string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency, string agent){
+            Property *n = new Property(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency, agent);
+            if(isEmpty){
+                head = tail = n;
+            }else{
+                n->next = head;
+                n->prev = tail;
+                tail->next = n;
+                head->prev = n;
+                tail = n;
             }
-            cout << "\n";
         }
-    }
+
+        void print(){
+            if(isEmpty()){
+                cout << "No properties" << endl;
+            }else{
+                Property *temp = head;
+                do{
+                    temp->print();
+                    temp = temp->next;
+                }while(temp != head);
+            }
+        }
+
+        int count(){
+            int count = 0;
+            if(!isEmpty()){
+                Property *temp = head;
+                do{
+                    count++;
+                    temp = temp->next;
+                }while(temp != head);
+            }
+        }
+
+        void readCSV()
+        {
+            long long int propertyID;
+            long int locationID;
+            string pageUrl;
+            string propertyType;
+            long long int price;
+            string priceType;
+            string location;
+            string city;
+            string province;
+            string locality;
+            long double latitude;
+            long double longitude;
+            int baths;
+            string area;
+            float areaMarla;
+            long double areaSqft;
+            string purpose;
+            int bedrooms;
+            string dateAdded;
+            int year;
+            int month;
+            int day;
+            string agency;
+            string agent;
+
+            string fname = "./data/property.csv";
+            vector<vector<string> > content;
+            vector<string> row;
+            string line, word;
+
+            fstream file(fname.c_str(), ios::in);
+            if (file.is_open())
+            {
+                while (getline(file, line))
+                {
+                    row.clear();
+
+                    stringstream str(line);
+
+                    while (getline(str, word, ','))
+                        row.push_back(word);
+                    content.push_back(row);
+                }
+            }
+            else
+                cout << "Could not open the file\n";
+
+            for (int i = 0; i < content.size(); i++)
+            {
+                propertyID = stoi(content[i][0]);
+                locationID = stoi(content[i][1]);
+                pageUrl = content[i][2];
+                propertyType = content[i][3];
+                price = content[i][4];
+            }
+        }
 };
 
 int main()
 {
-    Property property;
+    Properties properties;
     int mainMenuChoice;
     // init();
     while (1)
@@ -128,6 +235,8 @@ int main()
             system("cls");
             system("title View Properties");
             // cout << cur;
+            properties.readCSV();
+            getch();
             break;
         case 5:
             system("cls");
