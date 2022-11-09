@@ -1,4 +1,7 @@
+// Compile using:  g++ -std=c++11 main.cpp -o main.exe
+
 #include <iostream>
+#include <cstring>
 #include <string>
 #include <string.h>
 #include <cstdlib>
@@ -13,6 +16,7 @@
 #include <vector>
 #include <sstream>
 #include <typeinfo>
+#include <stdexcept>
 using namespace std;
 
 string convertToString(char *);
@@ -52,11 +56,10 @@ public:
     int month;
     int day;
     string agency;
-    string agent;
     Property *next;
     Property *prev;
 
-    Property(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price,  string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency, string agent)
+    Property(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price,  string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency)
     {
         this->propertyID = propertyID;
         this->locationID = locationID;
@@ -81,13 +84,12 @@ public:
         this->month = month;
         this->day = day;
         this->agency = agency;
-        this->agent = agent;
         next = prev = NULL;
     }
 
     void print()
     {
-        cout << propertyID << "  " << locationID << "  " << pageUrl << "  " << propertyType << "  " << price << "  " << priceType << "  " << location << "  " << city << "  " << province << "  " << locality << "  " << latitude << "  " << longitude << "  " << baths << "  " << area << "  " << areaMarla << "  " << areaSqft << "  " << purpose << "  " << bedrooms << "  " << dateAdded << "  " << year << "  " << month << "  " << day << "  " << agency << "  " << agent << endl;
+        cout << propertyID << "  " << locationID << "  " << pageUrl << "  " << propertyType << "  " << price << "  " << priceType << "  " << location << "  " << city << "  " << province << "  " << locality << "  " << latitude << "  " << longitude << "  " << baths << "  " << area << "  " << areaMarla << "  " << areaSqft << "  " << purpose << "  " << bedrooms << "  " << dateAdded << "  " << year << "  " << month << "  " << day << "  " << agency << "  " << endl;
     }
 };
 
@@ -109,9 +111,9 @@ class Properties{
             }
         }
 
-        void append(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price,  string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency, string agent){
-            Property *n = new Property(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency, agent);
-            if(isEmpty){
+        void append(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price,  string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency){
+            Property *n = new Property(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency);
+            if(isEmpty()){
                 head = tail = n;
             }else{
                 n->next = head;
@@ -170,7 +172,6 @@ class Properties{
             int month;
             int day;
             string agency;
-            string agent;
 
             string fname = "./data/property.csv";
             vector<vector<string> > content;
@@ -196,11 +197,32 @@ class Properties{
 
             for (int i = 0; i < content.size(); i++)
             {
-                propertyID = stoi(content[i][0]);
-                locationID = stoi(content[i][1]);
+                propertyID = stoll(content[i][0]);
+                locationID = stol(content[i][1]);
                 pageUrl = content[i][2];
                 propertyType = content[i][3];
-                price = content[i][4];
+                price = stoi(content[i][4]);
+                priceType = content[i][5];
+                location = content[i][6];
+                city = content[i][7];
+                province = content[i][8];
+                locality = content[i][9];
+                locality += content[i][10];
+                locality += content[i][11];
+                latitude = stold(content[i][12]);
+                longitude = stoi(content[i][13]);
+                baths = stoi(content[i][14]);
+                area = content[i][15];
+                areaMarla = stof(content[i][16]);
+                areaSqft = stold(content[i][17]);
+                purpose = content[i][18];
+                bedrooms = stoi(content[i][19]);
+                dateAdded = content[i][20];
+                year = stoi(content[i][21]);
+                month = stoi(content[i][22]);
+                day = stoi(content[i][23]);
+                agency = content[i][24];
+                append(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency);
             }
         }
 };
@@ -209,6 +231,7 @@ int main()
 {
     Properties properties;
     int mainMenuChoice;
+    properties.readCSV();
     // init();
     while (1)
     {
@@ -235,7 +258,7 @@ int main()
             system("cls");
             system("title View Properties");
             // cout << cur;
-            properties.readCSV();
+            properties.print();
             getch();
             break;
         case 5:
@@ -411,7 +434,7 @@ int mainMenu()
     CursorPosition(33, 7);
     cout << "3. Create new account";
     CursorPosition(33, 8);
-    cout << "4. Check today's currency rates";
+    cout << "4. View Properties";
     CursorPosition(33, 9);
     cout << "5. About Us";
     CursorPosition(33, 10);
