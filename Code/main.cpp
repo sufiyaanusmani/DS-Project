@@ -120,14 +120,10 @@ public:
 class Customer : public User
 {
 private:
-    unsigned long long int amount;
     int generateAccountNumber();
 
 public:
     void createNewAccount();
-    void depositAmount();
-    void withdrawAmount();
-    void transferAmount();
     void viewTransactionHistory();
     void login();
     void viewMyInfo();
@@ -135,7 +131,6 @@ public:
     int portalMenu();
     void storeData();
     void deleteAccount();
-    unsigned long long int getAmount();
     void accountSetting();
     void updateEmail(int);
     void updateInfo(int);
@@ -143,34 +138,34 @@ public:
     void changePassword(int);
 };
 
-class Admin : public User
-{
-private:
-    int generateAccountNumber();
+// class Admin : public User
+// {
+// private:
+//     int generateAccountNumber();
 
-public:
-    void storeData();
-    void login();
-    void viewMyInfo();
-    void portal();
-    int portalMenu();
-    void deleteAccount();
-    void createNewAccount();
-    void createCustomerDatabaseBackup();
-    void createCustomerDatabaseBackupAnimation();
-    void searchCustomer();
-    void searchByAccountNumber();
-    void searchByName();
-    void sortAscending();
-    void sortDescending();
-    void accountSetting();
-    void updateEmail(int);
-    void updateInfo(int);
-    void updateContactNumber(int);
-    void changePassword(int);
-    void generateReport();
-    void viewCustomerAccounts();
-};
+// public:
+//     void storeData();
+//     void login();
+//     void viewMyInfo();
+//     void portal();
+//     int portalMenu();
+//     void deleteAccount();
+//     void createNewAccount();
+//     void createCustomerDatabaseBackup();
+//     void createCustomerDatabaseBackupAnimation();
+//     void searchCustomer();
+//     void searchByAccountNumber();
+//     void searchByName();
+//     void sortAscending();
+//     void sortDescending();
+//     void accountSetting();
+//     void updateEmail(int);
+//     void updateInfo(int);
+//     void updateContactNumber(int);
+//     void changePassword(int);
+//     void generateReport();
+//     void viewCustomerAccounts();
+// };
 
 int main()
 {
@@ -352,14 +347,14 @@ int mainMenu()
     char ch;
     system("color 0F");
     system("cls");
-    system("title FAST NUCES BANK - MAIN MENU");
+    system("title FAST PROPERTIES - MAIN MENU");
     CursorPosition(0, 0);
     TextColor(10);
     currentDateAndTime();
     CursorPosition(32, 3);
     FontSize(0, 21);
     TextColor(11);
-    cout << "\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2 FAST-NUCES BANK \xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2";
+    cout << "\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2 FAST PROPERTIES \xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2";
     for (i = 1; i <= 8; i++)
     {
         CursorPosition(31, 3 + i);
@@ -853,7 +848,7 @@ void User::readData()
 {
     ifstream fin;
     system("cls");
-    fin.open("./data/customer.bank", ios::in | ios::binary);
+    fin.open("./data/customer.obj", ios::in | ios::binary);
     fin.read((char *)this, sizeof(*this));
     while (fin.eof() == 0)
     {
@@ -920,4 +915,518 @@ char User::getGender()
 char *User::getEmail()
 {
     return email;
+}
+
+// CUSTOMER
+
+void Customer::createNewAccount()
+{
+    char accNo[7];
+    this->accountNumber = generateAccountNumber();
+    setName();
+    system("cls");
+    setGender();
+    system("cls");
+    setAge();
+    system("cls");
+    system("cls");
+    setEmail();
+    system("cls");
+    system("cls");
+    setPassword();
+    system("color 0F");
+    system("cls");
+    TextColor(15);
+    cout << "Account Number  : ";
+    TextColor(9);
+    cout << this->accountNumber << endl;
+    TextColor(15);
+    cout << "Name            : ";
+    TextColor(10);
+    cout << this->name << endl;
+    TextColor(15);
+    cout << "Age             : ";
+    TextColor(10);
+    cout << this->age << endl;
+    TextColor(15);
+    cout << "Email: ";
+    TextColor(10);
+    cout << this->email << endl;
+    TextColor(1);
+    cout << "\nAre your sure you want to create your account: [y/n]: ";
+    std::sprintf(accNo, "%llu", accountNumber);
+    accNo[6] = '\0';
+    char ch, choice;
+    while (1)
+    {
+        ch = getch();
+        if (ch == 'y' || ch == 'Y' || ch == 'n' || ch == 'N')
+        {
+            choice = ch;
+            cout << ch << endl;
+            break;
+        }
+    }
+    cout << endl;
+    system("color 0F");
+    if (choice == 'y' || choice == 'Y')
+    {
+        Customer::storeData();
+        cout << "Account created successfully\n";
+        TextColor(1);
+        cout << "\nYou are redirected to the mainmenu\n";
+        TextColor(0);
+        loadingAnimation();
+    }
+}
+
+int Customer::generateAccountNumber()
+{
+    ifstream fin;
+    int num;
+    bool isFound = false;
+    srand(time(0));
+    fin.open("./data/customer.obj", ios::in | ios::binary);
+    if (!fin)
+    {
+        perror("Error");
+        Sleep(2000);
+        exit(1);
+    }
+    else
+    {
+        while (1)
+        {
+            num = (rand() % 10000) + 100000;
+            fin.read((char *)this, sizeof(*this));
+            while (fin.eof() == 0)
+            {
+                if (this->accountNumber == num)
+                {
+                    isFound = true;
+                    break;
+                }
+                fin.read((char *)this, sizeof(*this));
+            }
+            if (isFound == false)
+            {
+                break;
+            }
+        }
+    }
+    fin.close();
+    return num;
+}
+
+void Customer::storeData()
+{
+    ofstream fout;
+    fout.open("./data/customer.obj", ios::app | ios::binary);
+    if (!fout)
+    {
+        perror("Error");
+        Sleep(2000);
+        exit(1);
+    }
+    fout.write((char *)this, sizeof(*this));
+    fout.close();
+}
+
+void Customer::login()
+{
+    int id;
+    char pass[20];
+    bool idFound = false;
+    bool passFound = false;
+    ifstream fin;
+    fin.open("./data/customer.obj", ios::in | ios::binary);
+    if (!fin)
+    {
+        cout << "ERROR, file does not exist" << endl;
+    }
+    else
+    {
+        cout << "Enter account number: ";
+        TextColor(1);
+        fflush(stdin);
+        cin >> id;
+        TextColor(7);
+        fin.read((char *)this, sizeof(*this));
+        while (fin.eof() == 0)
+        {
+            if (id == this->accountNumber)
+            {
+                idFound = true;
+                cout << "Enter your password: ";
+                inputPassword(pass);
+                if (strcmp(password, pass) == 0)
+                {
+                    passFound = true;
+                    fin.close();
+                    loadingAnimation();
+                    Customer::portal();
+                }
+                else
+                {
+                    TextColor(4);
+                    cout << "\n\t\t\t\t\tWrong password" << endl;
+                    TextColor(7);
+                    Sleep(1000);
+                }
+                break;
+            }
+            fin.read((char *)this, sizeof(*this));
+        }
+        if (idFound == false)
+        {
+            cout << "\n\t\t\t\t\t\t";
+            TextColor(4);
+            cout << "This ID does not exists" << endl;
+            Sleep(1000);
+            TextColor(1);
+            cout << "You are redirected to the main menu...";
+            Sleep(1000);
+            loadingAnimation();
+        }
+        fin.close();
+    }
+}
+
+void Customer::viewMyInfo()
+{
+    system("color 0B");
+    system("cls");
+    system("title MY INFO");
+    TextColor(7);
+    cout << "Name: ";
+    TextColor(2);
+    cout << this->name << endl;
+    TextColor(7);
+    cout << "Account No: ";
+    TextColor(2);
+    cout << this->accountNumber << endl;
+    TextColor(7);
+    cout << "Age: ";
+    TextColor(2);
+    cout << this->age << endl;
+    TextColor(7);
+    cout << "Gender: ";
+    TextColor(2);
+    cout << (this->gender == 'm' ? "Male" : "Female") << endl;
+    TextColor(7);
+    cout << "Email: ";
+    TextColor(2);
+    cout << this->email << endl;
+    TextColor(1);
+
+    cout << "\n\t\t\t\t\tPress any key to go to your portal\n";
+    getch();
+    system("color 0F");
+}
+
+void Customer::portal()
+{
+    system("cls");
+    int customerPortalChoice, accNo;
+    accNo = accountNumber;
+    ifstream fin;
+
+    while (1)
+    {
+        fin.open("./data/customer.obj", ios::in | ios::binary);
+        if (!fin)
+        {
+            system("cls");
+            perror("Error");
+            cout << "\nProgram will exit\n";
+            Sleep(2000);
+            exit(1);
+        }
+        fin.read((char *)this, sizeof(*this));
+        while (fin.eof() == 0)
+        {
+            if (accNo == accountNumber)
+            {
+                break;
+            }
+            fin.read((char *)this, sizeof(*this));
+        }
+        fin.close();
+        customerPortalChoice = Customer::portalMenu();
+        switch (customerPortalChoice)
+        {
+        case 1:
+            Customer::viewMyInfo();
+            // customerPortal();
+            break;
+        case 2:
+            system("cls");
+            system("title DEPOSIT AMOUNT");
+            // depositAmount();
+            break;
+        case 3:
+            system("cls");
+            system("title WITHDRAW AMOUNT");
+            // withdrawAmount();
+            break;
+        case 4:
+            system("cls");
+            system("title TRANSFER AMOUNT");
+            // transferAmount();
+            break;
+        case 5:
+            system("cls");
+            system("title VIEW TRANSACTION HISTORY");
+            // t.viewTransactionHistoryCustomer(accNo);
+            break;
+        case 6:
+            system("cls");
+            system("title DELETE ACCOUNT");
+            Customer::accountSetting();
+            break;
+        case 7:
+            goto customerPortalEnd;
+            break;
+        default:
+            system("cls");
+            system("title ERROR");
+            CursorPosition(0, 0);
+            system("color 4F");
+            cout << "\aWrong choice entered, try again! \a";
+            Sleep(1500);
+            system("color 0F");
+            break;
+        }
+    }
+customerPortalEnd:
+    system("cls");
+}
+
+int Customer::portalMenu()
+{
+    int choice, i;
+    char ch;
+    system("color 0F");
+    system("cls");
+    system("title MY PORTAL");
+    CursorPosition(0, 0);
+    TextColor(10);
+    currentDateAndTime();
+    CursorPosition(0, 2);
+    TextColor(9);
+    cout << "Welcome, " << this->name << endl;
+    CursorPosition(32, 5);
+    TextColor(11);
+    cout << "\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2 FAST PROPERTIES \xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2";
+    for (i = 1; i <= 14; i++)
+    {
+        CursorPosition(31, 5 + i);
+        cout << "|";
+    }
+    for (i = 1; i <= 14; i++)
+    {
+        CursorPosition(91, 5 + i);
+        cout << "|";
+    }
+    for (i = 1; i <= 60; i++)
+    {
+        CursorPosition(31 + i, 20);
+        cout << "-";
+    }
+    TextColor(15);
+    CursorPosition(33, 7);
+    cout << "1. View my information";
+    CursorPosition(33, 9);
+    cout << "2. Deposit Money";
+    CursorPosition(33, 11);
+    cout << "3. Withdraw Money";
+    CursorPosition(33, 13);
+    cout << "4. Transfer Money";
+    CursorPosition(33, 15);
+    cout << "5. View My Transaction History";
+    CursorPosition(33, 17);
+    cout << "6. Account Settings";
+    CursorPosition(33, 19);
+    cout << "7. Logout";
+    CursorPosition(32, 22);
+    TextColor(5);
+    cout << "Enter your choice: ";
+    fflush(stdin);
+    while (1)
+    {
+        ch = getch();
+        if (ch >= '1' && ch <= '7')
+        {
+            cout << ch;
+            choice = ch - '0';
+        }
+        else if (ch == 13)
+        {
+            break;
+        }
+        else if (ch == 8)
+        {
+            cout << "\b \b";
+        }
+    }
+    system("color 0F");
+    return choice;
+}
+
+void Customer::deleteAccount()
+{
+    int accNo = this->accountNumber;
+    char ch, choice;
+    system("cls");
+    TextColor(4);
+    cout << "Are you sure you want to delete your account? [y/n]: ";
+    while (1)
+    {
+        ch = getch();
+        if (ch == 'y' || ch == 'Y' || ch == 'n' || ch == 'N')
+        {
+            choice = ch;
+            cout << ch << endl;
+            break;
+        }
+    }
+    system("color 0F");
+    if (choice == 'y' || choice == 'Y')
+    {
+        ifstream fin;
+        ofstream fout;
+        fout.open("./data/temp.obj", ios::out | ios::binary);
+        fin.open("./data/customer.obj", ios::in | ios::binary);
+        if (!fin)
+        {
+            perror("Error");
+            Sleep(2000);
+            exit(1);
+        }
+        else
+        {
+            fin.read((char *)this, sizeof(*this));
+            while (fin.eof() == 0)
+            {
+                if (this->accountNumber != accNo)
+                {
+                    fout.write((char *)this, sizeof(*this));
+                }
+                fin.read((char *)this, sizeof(*this));
+            }
+        }
+        fin.close();
+        fout.close();
+        remove("./data/customer.obj");
+        rename("./data/temp.obj", "./data/customer.obj");
+        TextColor(2);
+        cout << "\n\t\t\t\t\tAccount deleted successfully" << endl;
+        Sleep(2500);
+        main();
+    }
+}
+
+void Customer::accountSetting()
+{
+    int choice;
+    while (1)
+    {
+        system("cls");
+        cout << "1. Update my email" << endl;
+        cout << "2. Update my contact number" << endl;
+        cout << "3. Change my password" << endl;
+        cout << "4. Delete my account" << endl;
+        cout << "5. Go back" << endl;
+        TextColor(1);
+        cout << endl
+             << "Enter your choice: ";
+        TextColor(7);
+        fflush(stdin);
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+            Customer::updateEmail(this->accountNumber);
+            break;
+        case 2:
+            Customer::updateContactNumber(this->accountNumber);
+            break;
+        case 3:
+            Customer::changePassword(this->accountNumber);
+            break;
+        case 4:
+            Customer::deleteAccount();
+            break;
+        case 5:
+            goto customerAccountSettingEnd;
+            break;
+        default:
+            TextColor(4);
+            cout << "Enter a valid choice" << endl;
+            Sleep(1000);
+            TextColor(7);
+            break;
+        }
+    }
+customerAccountSettingEnd:
+    system("cls");
+}
+
+void Customer::updateInfo(int accNo)
+{
+    fstream file;
+    Customer c;
+    file.open("./data/customer.bank", ios::in | ios::out | ios::ate | ios::binary);
+    file.seekg(0);
+    file.read((char *)&c, sizeof(c));
+    while (file.eof() == 0)
+    {
+        if (c.accountNumber == accNo)
+        {
+            file.seekp(file.tellp() - sizeof(c));
+            file.write((char *)this, sizeof(*this));
+            break;
+        }
+        file.read((char *)&c, sizeof(c));
+    }
+    file.close();
+}
+
+void Customer::updateEmail(int accNo)
+{
+    setEmail();
+    system("cls");
+    cout << "Enter your password to confirm: ";
+    char passToConfirm[20];
+    inputPassword(passToConfirm);
+    if (strcmp(password, passToConfirm) == 0)
+    {
+        Customer::updateInfo(accNo);
+    }
+}
+
+void Customer::updateContactNumber(int accNo)
+{
+    system("cls");
+    cout << "Enter your password to confirm: ";
+    char passToConfirm[20];
+    inputPassword(passToConfirm);
+    if (strcmp(password, passToConfirm) == 0)
+    {
+        Customer::updateInfo(accNo);
+    }
+}
+
+void Customer::changePassword(int accNo)
+{
+    char passToConfirm[20];
+    cout << "Enter your password to confirm: ";
+    inputPassword(passToConfirm);
+    if (strcmp(password, passToConfirm) == 0)
+    {
+        system("cls");
+        system("title ENTER NEW PASSWORD");
+        setPassword();
+        Customer::updateInfo(accNo);
+    }
 }
