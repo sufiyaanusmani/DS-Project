@@ -1043,6 +1043,7 @@ void Customer::login()
     if (!fin)
     {
         cout << "ERROR, file does not exist" << endl;
+        getch();
     }
     else
     {
@@ -1376,7 +1377,7 @@ void Customer::updateInfo(int accNo)
 {
     fstream file;
     Customer c;
-    file.open("./data/customer.bank", ios::in | ios::out | ios::ate | ios::binary);
+    file.open("./data/customer.obj", ios::in | ios::out | ios::ate | ios::binary);
     file.seekg(0);
     file.read((char *)&c, sizeof(c));
     while (file.eof() == 0)
