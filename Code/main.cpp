@@ -77,7 +77,7 @@ public:
     void print();
     int count();
     void readCSV();
-    void search(string);
+    void search();
 };
 
 class User
@@ -175,7 +175,6 @@ int main()
     int mainMenuChoice;
     properties.readCSV();
     Customer customer;
-    string location;
     // customer.storeData();
     // init();
     getch();
@@ -187,43 +186,45 @@ int main()
         {
         case 1:
             system("cls");
-            system("title Location");
-            cout << "Enter location: ";
-            getline(cin, location);
-            properties.search(location);
+            system("title Search");
+            properties.search();
             break;
         case 2:
             system("cls");
-            system("title Admin Login");
-            // a.login();
+            system("title Properties");
+            properties.print();
             break;
         case 3:
             system("cls");
-            system("title Customer Login");
-            customer.login();
+            system("title Buy");
+            // properties.buy();
             break;
         case 4:
             system("cls");
-            system("title Create New Account");
-            customer.createNewAccount();
+            system("title Rent");
+            // properties.rent();
             break;
         case 5:
             system("cls");
-            system("title View Properties");
-            // cout << cur;
-            properties.print();
-            getch();
+            system("title Predice");
+            // properties.predict();
             break;
         case 6:
             system("cls");
-            system("title About Us");
-            aboutUs();
+            system("title Login");
+            customer.login();
             break;
         case 7:
             system("cls");
-            // taxationDep.showInfo();
+            system("title Create new account");
+            customer.createNewAccount();
             break;
         case 8:
+            system("cls");
+            system("title About us");
+            aboutUs();
+            break;
+        case 9:
             system("cls");
             CursorPosition(40, 10);
             system("title Good Bye");
@@ -368,38 +369,40 @@ int mainMenu()
     FontSize(0, 21);
     TextColor(11);
     cout << "\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2 FAST PROPERTIES \xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2";
-    for (i = 1; i <= 8; i++)
+    for (i = 1; i <= 10; i++)
     {
         CursorPosition(31, 3 + i);
         printf("|");
     }
-    for (i = 1; i <= 8; i++)
+    for (i = 1; i <= 10; i++)
     {
         CursorPosition(91, 3 + i);
         printf("|");
     }
     for (i = 1; i <= 60; i++)
     {
-        CursorPosition(31 + i, 12);
+        CursorPosition(31 + i, 14);
         printf("-");
     }
     TextColor(15);
     CursorPosition(33, 5);
-    cout << "1. Enter location";
+    cout << "1. Search";
     CursorPosition(33, 6);
-    cout << "2. Login as Admin";
+    cout << "2. View all properties";
     CursorPosition(33, 7);
-    cout << "3. Login as Customer";
+    cout << "3. Buy";
     CursorPosition(33, 8);
-    cout << "4. Create new account";
+    cout << "4. Rent";
     CursorPosition(33, 9);
-    cout << "5. View Properties";
+    cout << "5. Predict Price";
     CursorPosition(33, 10);
-    cout << "6. About Us";
+    cout << "6. Login";
     CursorPosition(33, 11);
-    cout << "7. Taxation Department";
+    cout << "7. Create new account";
     CursorPosition(33, 12);
-    cout << "8. Exit";
+    cout << "8. About Us";
+    CursorPosition(33, 13);
+    cout << "9. Exit";
     CursorPosition(32, 15);
     cout << "Enter your choice: ";
     fflush(stdin);
@@ -407,7 +410,7 @@ int mainMenu()
     while (1)
     {
         ch = getch();
-        if (ch >= '1' && ch <= '7' && i == 0)
+        if (ch >= '1' && ch <= '9' && i == 0)
         {
             cout << ch;
             choice = ch - '0';
@@ -711,8 +714,11 @@ void Properties::readCSV()
     }
 }
 
-void Properties::search(string city){
+void Properties::search(){
     // Linear Search
+    string city;
+    cout << "Enter location: ";
+    getline(cin, city);
     Property *p = head;
     do{
         if(p->city == city){
