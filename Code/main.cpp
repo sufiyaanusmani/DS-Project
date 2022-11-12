@@ -81,6 +81,7 @@ public:
     void searchByCity(string);
     void searchByProvince(string);
     void searchByPropertyID(int);
+    bool propertyExists(int);
 };
 
 class User
@@ -791,6 +792,17 @@ void Properties::searchByPropertyID(int ID){
     }while(p != head);
     cout << "Press any key to continue...";
     getch();
+}
+
+bool Properties::propertyExists(int ID){
+    Property *p = head;
+    do{
+        if(p->propertyID == ID){
+            return true;
+        }
+        p = p->next;
+    }while(p != head);
+    return false;
 }
 
 // USER
