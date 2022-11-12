@@ -78,6 +78,9 @@ public:
     int count();
     void readCSV();
     void search();
+    void searchByCity(string);
+    void searchByProvince(string);
+    void searchByPropertyID(int);
 };
 
 class User
@@ -177,7 +180,6 @@ int main()
     Customer customer;
     // customer.storeData();
     // init();
-    getch();
     while (1)
     {
         system("cls");
@@ -715,14 +717,75 @@ void Properties::readCSV()
 }
 
 void Properties::search(){
+    int choice, propID;
+    string str;
+    while(1){
+        system("cls");
+        fflush(stdin);
+        cout << "1. Search by city" << endl;
+        cout << "2. Search by province" << endl;
+        cout << "3. Search by property ID" << endl;
+        cout << "4. Go back" << endl;
+        cout << "\n\nEnter your choice: ";
+        cin >> choice;
+        system("cls");
+        fflush(stdin);
+        if(choice == 1){
+            cout << "Enter city: ";
+            getline(cin, str);
+            searchByCity(str);
+        }else if(choice == 2){
+            cout << "Enter province: ";
+            getline(cin, str);
+            searchByProvince(str);
+        }else if(choice == 3){
+            cout << "Enter property ID: ";
+            cin >> propID;
+            searchByPropertyID(propID);
+        }else if(choice == 4){
+            loadingAnimation();
+            break;
+        }else{
+            cout << "Wrong choice entered, please enter a correct choice" << endl;
+            Sleep(1000);
+        }
+    }
+    
+}
+
+void Properties::searchByCity(string city){
     // Linear Search
-    string city;
-    cout << "Enter location: ";
-    getline(cin, city);
     Property *p = head;
     do{
         if(p->city == city){
             p->print();
+        }
+        p = p->next;
+    }while(p != head);
+    cout << "Press any key to continue...";
+    getch();
+}
+
+void Properties::searchByProvince(string province){
+    // Linear Search
+    Property *p = head;
+    do{
+        if(p->province == province){
+            p->print();
+        }
+        p = p->next;
+    }while(p != head);
+    cout << "Press any key to continue...";
+    getch();
+}
+
+void Properties::searchByPropertyID(int ID){
+    // Linear Search
+    Property *p = head;
+    do{
+        if(p->propertyID == ID){
+            p->print();
+            break;
         }
         p = p->next;
     }while(p != head);
