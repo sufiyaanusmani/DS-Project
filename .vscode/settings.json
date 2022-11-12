@@ -3,6 +3,7 @@
         "*html": "html",
         "xstring": "cpp",
         "iostream": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "iomanip": "cpp"
     }
 }

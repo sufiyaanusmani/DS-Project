@@ -77,6 +77,7 @@ public:
     void print();
     int count();
     void readCSV();
+    void search(string);
 };
 
 class User
@@ -136,6 +137,7 @@ public:
     void updateInfo(int);
     void updateContactNumber(int);
     void changePassword(int);
+    void addData();
 };
 
 // class Admin : public User
@@ -172,7 +174,11 @@ int main()
     Properties properties;
     int mainMenuChoice;
     properties.readCSV();
+    Customer customer;
+    string location;
+    // customer.storeData();
     // init();
+    getch();
     while (1)
     {
         system("cls");
@@ -181,36 +187,43 @@ int main()
         {
         case 1:
             system("cls");
-            system("title Admin Login");
-            // a.login();
+            system("title Location");
+            cout << "Enter location: ";
+            getline(cin, location);
+            properties.search(location);
             break;
         case 2:
             system("cls");
-            system("title Customer Login");
-            // c.login();
+            system("title Admin Login");
+            // a.login();
             break;
         case 3:
             system("cls");
-            system("title Create New Account");
-            // c.createNewAccount();
+            system("title Customer Login");
+            customer.login();
             break;
         case 4:
+            system("cls");
+            system("title Create New Account");
+            customer.createNewAccount();
+            break;
+        case 5:
             system("cls");
             system("title View Properties");
             // cout << cur;
             properties.print();
             getch();
             break;
-        case 5:
+        case 6:
             system("cls");
             system("title About Us");
             aboutUs();
             break;
-        case 6:
+        case 7:
             system("cls");
             // taxationDep.showInfo();
             break;
-        case 7:
+        case 8:
             system("cls");
             CursorPosition(40, 10);
             system("title Good Bye");
@@ -372,19 +385,21 @@ int mainMenu()
     }
     TextColor(15);
     CursorPosition(33, 5);
-    cout << "1. Login as Admin";
+    cout << "1. Enter location";
     CursorPosition(33, 6);
-    cout << "2. Login as Customer";
+    cout << "2. Login as Admin";
     CursorPosition(33, 7);
-    cout << "3. Create new account";
+    cout << "3. Login as Customer";
     CursorPosition(33, 8);
-    cout << "4. View Properties";
+    cout << "4. Create new account";
     CursorPosition(33, 9);
-    cout << "5. About Us";
+    cout << "5. View Properties";
     CursorPosition(33, 10);
-    cout << "6. Taxation Department";
+    cout << "6. About Us";
     CursorPosition(33, 11);
-    cout << "7. Exit";
+    cout << "7. Taxation Department";
+    CursorPosition(33, 12);
+    cout << "8. Exit";
     CursorPosition(32, 15);
     cout << "Enter your choice: ";
     fflush(stdin);
@@ -547,7 +562,7 @@ Property::Property(long long int propertyID, long int locationID, string pageUrl
 
 void Property::print()
 {
-    cout << propertyID << "  " << locationID << "  " << pageUrl << "  " << propertyType << "  " << price << "  " << priceType << "  " << location << "  " << city << "  " << province << "  " << locality << "  " << latitude << "  " << longitude << "  " << baths << "  " << area << "  " << areaMarla << "  " << areaSqft << "  " << purpose << "  " << bedrooms << "  " << dateAdded << "  " << year << "  " << month << "  " << day << "  " << agency << "  " << endl;
+    cout << setw(7) << propertyType << "  " << setw(12) << price << "  " << setw(40) << location << "  " << setw(10) << city << "  " << setw(10) << province << "  " << setw(10) << areaSqft << "  " << setw(10) << purpose << "  " << dateAdded << endl;
 }
 
 // PROPERTIES
@@ -694,6 +709,19 @@ void Properties::readCSV()
         agency = content[i][24];
         append(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency);
     }
+}
+
+void Properties::search(string city){
+    // Linear Search
+    Property *p = head;
+    do{
+        if(p->city == city){
+            p->print();
+        }
+        p = p->next;
+    }while(p != head);
+    cout << "Press any key to continue...";
+    getch();
 }
 
 // USER
@@ -848,7 +876,7 @@ void User::readData()
 {
     ifstream fin;
     system("cls");
-    fin.open("./data/customer.obj", ios::in | ios::binary);
+    fin.open("./data/customer.bank", ios::in | ios::binary);
     fin.read((char *)this, sizeof(*this));
     while (fin.eof() == 0)
     {
@@ -986,7 +1014,7 @@ int Customer::generateAccountNumber()
     int num;
     bool isFound = false;
     srand(time(0));
-    fin.open("./data/customer.obj", ios::in | ios::binary);
+    fin.open("./data/customer.bank", ios::in | ios::binary);
     if (!fin)
     {
         perror("Error");
@@ -1021,7 +1049,7 @@ int Customer::generateAccountNumber()
 void Customer::storeData()
 {
     ofstream fout;
-    fout.open("./data/customer.obj", ios::app | ios::binary);
+    fout.open("./data/customer.bank", ios::app | ios::binary);
     if (!fout)
     {
         perror("Error");
@@ -1039,7 +1067,7 @@ void Customer::login()
     bool idFound = false;
     bool passFound = false;
     ifstream fin;
-    fin.open("./data/customer.obj", ios::in | ios::binary);
+    fin.open("./data/customer.bank", ios::in | ios::binary);
     if (!fin)
     {
         cout << "ERROR, file does not exist" << endl;
@@ -1134,7 +1162,7 @@ void Customer::portal()
 
     while (1)
     {
-        fin.open("./data/customer.obj", ios::in | ios::binary);
+        fin.open("./data/customer.bank", ios::in | ios::binary);
         if (!fin)
         {
             system("cls");
@@ -1296,8 +1324,8 @@ void Customer::deleteAccount()
     {
         ifstream fin;
         ofstream fout;
-        fout.open("./data/temp.obj", ios::out | ios::binary);
-        fin.open("./data/customer.obj", ios::in | ios::binary);
+        fout.open("./data/temp.bank", ios::out | ios::binary);
+        fin.open("./data/customer.bank", ios::in | ios::binary);
         if (!fin)
         {
             perror("Error");
@@ -1318,8 +1346,8 @@ void Customer::deleteAccount()
         }
         fin.close();
         fout.close();
-        remove("./data/customer.obj");
-        rename("./data/temp.obj", "./data/customer.obj");
+        remove("./data/customer.bank");
+        rename("./data/temp.bank", "./data/customer.bank");
         TextColor(2);
         cout << "\n\t\t\t\t\tAccount deleted successfully" << endl;
         Sleep(2500);
@@ -1377,7 +1405,7 @@ void Customer::updateInfo(int accNo)
 {
     fstream file;
     Customer c;
-    file.open("./data/customer.obj", ios::in | ios::out | ios::ate | ios::binary);
+    file.open("./data/customer.bank", ios::in | ios::out | ios::ate | ios::binary);
     file.seekg(0);
     file.read((char *)&c, sizeof(c));
     while (file.eof() == 0)
