@@ -55,11 +55,10 @@ public:
     int year;
     int month;
     int day;
-    string agency;
     Property *next;
     Property *prev;
 
-    Property(long long int, long int, string, string, long long int, string, string, string, string, string, long double, long double, int, string, float, long double, string, int, string, int, int, int, string);
+    Property(long long int, long int, string, string, long long int, string, string, string, string, string, long double, long double, int, string, float, long double, string, int, string, int, int, int);
     void print();
 };
 
@@ -73,7 +72,7 @@ private:
 public:
     Properties();
     bool isEmpty();
-    void append(long long int, long int, string, string, long long int, string, string, string, string, string, long double, long double, int, string, float, long double, string, int, string, int, int, int, string);
+    void append(long long int, long int, string, string, long long int, string, string, string, string, string, long double, long double, int, string, float, long double, string, int, string, int, int, int);
     void print();
     int count();
     void readCSV();
@@ -84,6 +83,7 @@ public:
     bool propertyExists(int);
     void buy();
     void deleteProperty(int);
+    void updateData();
 };
 
 class User
@@ -181,6 +181,7 @@ int main()
     int mainMenuChoice;
     properties.readCSV();
     Customer customer;
+    properties.buy();
     // customer.storeData();
     // init();
     while (1)
@@ -540,7 +541,7 @@ void aboutUs()
 
 // PROPERTY
 
-Property::Property(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price, string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency)
+Property::Property(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price, string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day)
 {
     this->propertyID = propertyID;
     this->locationID = locationID;
@@ -564,7 +565,6 @@ Property::Property(long long int propertyID, long int locationID, string pageUrl
     this->year = year;
     this->month = month;
     this->day = day;
-    this->agency = agency;
     next = prev = NULL;
 }
 
@@ -592,9 +592,9 @@ bool Properties::isEmpty()
     }
 }
 
-void Properties::append(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price, string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day, string agency)
+void Properties::append(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price, string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day)
 {
-    Property *n = new Property(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency);
+    Property *n = new Property(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day);
     if (isEmpty())
     {
         head = tail = n;
@@ -664,9 +664,8 @@ void Properties::readCSV()
     int year;
     int month;
     int day;
-    string agency;
 
-    string fname = "./data/property_main.csv";
+    string fname = "./data/property.csv";
     vector<vector<string> > content;
     vector<string> row;
     string line, word;
@@ -715,8 +714,7 @@ void Properties::readCSV()
         year = stoi(content[i][21]);
         month = stoi(content[i][22]);
         day = stoi(content[i][23]);
-        agency = content[i][24];
-        append(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency);
+        append(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day);
         
     }
 }
@@ -815,7 +813,99 @@ void Properties::buy(){
         cout << "Enter property ID (-1 to go back): ";
         fflush(stdin);
         cin >> propID;
+        if(propertyExists(propID)){
+            deleteProperty(propID);
+            cout << "Property bought successfully" << endl;
+            Sleep(1000);
+            return;
+        }
     }
+    cout << "This property does not exists" << endl;
+    Sleep(1000);
+}
+
+void Properties::deleteProperty(int propID){
+     // Open FIle pointers
+    fstream fin, fout, sold;
+  
+    // Open the existing file
+    fin.open("./data/property.csv", ios::in);
+  
+    // Create a new file to store the non-deleted data
+    fout.open("temp.csv", ios::out);
+  
+    int id, count = 0, i;
+    int index;
+    string line, word;
+    vector<string> row;
+    getline(fin, line);
+    row.clear();
+    stringstream first(line);
+    while(getline(first, word, ',')){
+        row.push_back(word);
+    }
+    int first_size = row.size();
+    for(int i=0;i<first_size - 1;i++){
+        fout << row[i] << ",";
+    }
+    fout << row[first_size-1] << "\n";
+    // Check if this record exists
+    // If exists, leave it and
+    // add all other data to the new file
+    while (!fin.eof()) {
+  
+        row.clear();
+        getline(fin, line);
+        stringstream s(line);
+  
+        while (getline(s, word, ',')) {
+            row.push_back(word);
+        }
+        int row_size = row.size();
+        id = stoi(row[0]);
+  
+        // writing all records,
+        // except the record to be deleted,
+        // into the new file 'reportcardnew.csv'
+        // using fout pointer
+        if (id != propID) {
+            if (!fin.eof()) {
+                for (i = 0; i < row_size - 1; i++) {
+                    fout << row[i] << ",";
+                }
+                fout << row[row_size - 1] << "\n";
+            }
+        }
+        else {
+            count = 1;
+            sold.open("./data/sold.csv", ios::out | ios::app);
+            for(int i=0;i<row_size-1;i++){
+                sold << row[i] << ",";
+            }
+            sold << row[row_size - 1] << "\n";
+            sold.close();
+        }
+        if (fin.eof())
+            break;
+    }
+    if (count == 1)
+        cout << "Record deleted\n";
+    else
+        cout << "Record not found\n";
+  
+    // Close the pointers
+    fin.close();
+    fout.close();
+  
+    // removing the existing file
+    remove("./data/property.csv");
+  
+    // renaming the new file with the existing file name
+    rename("temp.csv", "./data/property.csv");
+}
+
+void Properties::updateData(){
+
 }
 
 // USER
