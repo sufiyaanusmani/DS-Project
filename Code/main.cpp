@@ -82,6 +82,8 @@ public:
     void searchByProvince(string);
     void searchByPropertyID(int);
     bool propertyExists(int);
+    void buy();
+    void deleteProperty(int);
 };
 
 class User
@@ -664,11 +666,10 @@ void Properties::readCSV()
     int day;
     string agency;
 
-    string fname = "./data/property.csv";
+    string fname = "./data/property_main.csv";
     vector<vector<string> > content;
     vector<string> row;
     string line, word;
-
     fstream file(fname.c_str(), ios::in);
     if (file.is_open())
     {
@@ -685,6 +686,8 @@ void Properties::readCSV()
     }
     else
         cout << "Could not open the file\n";
+
+    file.close();
 
     for (int i = 1; i < content.size(); i++)
     {
@@ -714,6 +717,7 @@ void Properties::readCSV()
         day = stoi(content[i][23]);
         agency = content[i][24];
         append(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day, agency);
+        
     }
 }
 
@@ -803,6 +807,15 @@ bool Properties::propertyExists(int ID){
         p = p->next;
     }while(p != head);
     return false;
+}
+
+void Properties::buy(){
+    int propID;
+    while(1){
+        cout << "Enter property ID (-1 to go back): ";
+        fflush(stdin);
+        cin >> propID;
+    }
 }
 
 // USER
