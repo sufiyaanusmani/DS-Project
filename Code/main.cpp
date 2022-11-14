@@ -149,7 +149,7 @@ public:
     void changePassword(int);
     void addData();
     void buy();
-    void sendEmail();
+    void sendEmailToAll(string, string);
 };
 
 class Stack{
@@ -186,6 +186,7 @@ class EmailQueue{
         void enqueue(int, string, string);
         void dequeue();
         EmailNode * getFront();
+        string getFrontEmail();
         void sendEmailToAll();
         void printQueue();
 };
@@ -224,7 +225,9 @@ int main()
     int mainMenuChoice;
     properties.readCSV();
     Customer customer;
-    customer.sendEmail();
+    string subject = "FAST Properties - Automated Email";
+    string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
+    customer.sendEmailToAll(subject, content);
     getch();
     // init();
     while (1)
@@ -1742,7 +1745,7 @@ void Customer::buy(){
     Sleep(1000);
 }
 
-void Customer::sendEmail(){
+void Customer::sendEmailToAll(string subject, string content){
     EmailQueue emailQueue;
     ifstream fin;
     Customer customer;
@@ -1755,7 +1758,29 @@ void Customer::sendEmail(){
         fin.read((char *)&customer, sizeof(customer));
     }
     fin.close();
-    emailQueue.printQueue();
+    
+    // storing emails in receiver.txt
+    ofstream fout;
+    // storing subject in subject.txt
+    fout.open("./python-email/subject.txt", ios::out);
+    fout << subject;
+    fout.close();
+
+    // storing content in content.txt
+    fout.open("./python-email/content.txt", ios::out);
+    fout << content;
+    fout.close();
+
+
+    while(!emailQueue.isEmpty()){
+        fout.open("./python-email/receiver.txt", ios::out);
+        fout << emailQueue.getFrontEmail() << "\n";
+        emailQueue.dequeue();
+        fout.close();
+        system("python send_email.py");
+    }
+
+
 }
 
 // STACK
@@ -1849,4 +1874,10 @@ void EmailQueue::printQueue(){
         }
     }
     cout << endl;
+}
+
+string EmailQueue::getFrontEmail(){
+    if(!isEmpty()){
+        return (front->email);
+    }
 }

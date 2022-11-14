@@ -3,11 +3,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import os
 
-
-
-
-
-
 def sendEmail(msg, rec):
     sender = "fastnucesbank@gmail.com"
     my_password = r"onfhcmtapladsevi"
@@ -28,7 +23,7 @@ def sendEmail(msg, rec):
     s.quit()
 
 def readReceivers():
-    file1 = open(os.getcwd()+"\\Code\\python-email\\receiver.txt", 'r')
+    file1 = open(os.getcwd()+"\\python-email\\receiver.txt", 'r')
     receivers = ""
     count = 0
     
@@ -51,7 +46,7 @@ def readReceivers():
     return receivers
 
 def readContent():
-    f = open(os.getcwd()+"\\Code\\python-email\\content.txt", 'r')
+    f = open(os.getcwd()+"\\python-email\\content.txt", 'r')
     data = f.read()
     f.close()
     return data
