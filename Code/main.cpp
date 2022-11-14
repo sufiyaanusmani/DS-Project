@@ -1,4 +1,4 @@
-// Compile using:  g++ -std=c++11 main.cpp -o main.exe
+// Compile using:  g++ -std=c++11 main.cpp -o main.exe && ./main.exe
 
 #include <iostream>
 #include <cstring>
@@ -82,7 +82,7 @@ public:
     void searchByPropertyID(int);
     bool propertyExists(int);
     // void buy();
-    void sellProperty(int, int);
+    void sellProperty(int, int, string);
     void deleteFirstNode();
     void deleteLastNode();
     void deleteNode(int);
@@ -149,46 +149,45 @@ public:
     void changePassword(int);
     void addData();
     void buy();
+    void sendEmail();
 };
 
 class Stack{
     private:
         Property *top;
     public:
-        Stack(){
-            top = NULL;
-        }
+        Stack();
+        bool isEmpty();
+        void push(Property *p);
+        void pop();
+        Property *peek();
 
-        bool isEmpty(){
-            if(top == NULL){
-                return true;
-            }else{
-                return false;
-            }
-        }
 
-        void push(Property *p){
-            p->next = top;
-            top = p;
-        }
+};
 
-        void pop(){
-            if(isEmpty()){
-                return;
-            }
-            Property *temp = top;
-            top = top->next;
-            delete temp;
-        }
+class EmailNode{
+    public:
+        int accountNumber;
+        string name;
+        string email;
+        EmailNode *next;
 
-        Property *peek(){
-            if(isEmpty()){
-                return NULL;
-            }
-            return top;
-        }
+        EmailNode(int, string, string);
+};
 
-        
+
+class EmailQueue{
+    private:
+        EmailNode *front;
+        EmailNode *rear;
+    public:
+        EmailQueue();
+        bool isEmpty();
+        void enqueue(int, string, string);
+        void dequeue();
+        EmailNode * getFront();
+        void sendEmailToAll();
+        void printQueue();
 };
 
 // class Admin : public User
@@ -225,6 +224,8 @@ int main()
     int mainMenuChoice;
     properties.readCSV();
     Customer customer;
+    customer.sendEmail();
+    getch();
     // init();
     while (1)
     {
@@ -843,7 +844,7 @@ bool Properties::propertyExists(int ID){
 
 
 
-void Properties::sellProperty(int propID, int buyer){
+void Properties::sellProperty(int propID, int buyer, string name){
      // Open FIle pointers
     fstream fin, fout, sold;
   
@@ -897,7 +898,7 @@ void Properties::sellProperty(int propID, int buyer){
             for(int i=0;i<row_size;i++){
                 sold << row[i] << ",";
             }
-            sold << buyer << "\n";
+            sold << buyer << "," << name << "\n";
             sold.close();
         }
         if (fin.eof())
@@ -1730,7 +1731,7 @@ void Customer::buy(){
             return;
         }
         if(properties.propertyExists(propID)){
-            properties.sellProperty(propID, accountNumber);
+            properties.sellProperty(propID, accountNumber, name);
             cout << "Property bought successfully" << endl;
             properties.deleteNode(propID);
             Sleep(1000);
@@ -1739,4 +1740,113 @@ void Customer::buy(){
     }
     cout << "This property does not exists" << endl;
     Sleep(1000);
+}
+
+void Customer::sendEmail(){
+    EmailQueue emailQueue;
+    ifstream fin;
+    Customer customer;
+    system("cls");
+    fin.open("./data/customer.bank", ios::in | ios::binary);
+    fin.read((char *)&customer, sizeof(customer));
+    while (fin.eof() == 0)
+    {
+        emailQueue.enqueue(customer.accountNumber, customer.name, customer.email);
+        fin.read((char *)&customer, sizeof(customer));
+    }
+    fin.close();
+    emailQueue.printQueue();
+}
+
+// STACK
+
+Stack::Stack(){
+    top = NULL;
+}
+
+bool Stack::isEmpty(){
+    if(top == NULL){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+void Stack::push(Property *p){
+    p->next = top;
+    top = p;
+}
+
+void Stack::pop(){
+    if(isEmpty()){
+        return;
+    }
+    Property *temp = top;
+    top = top->next;
+    delete temp;
+}
+
+Property *Stack::peek(){
+    if(isEmpty()){
+        return NULL;
+    }
+    return top;
+}
+
+// EMAILNODE
+
+EmailNode::EmailNode(int accountNumber, string name, string email){
+    this->accountNumber = accountNumber;
+    this->name = name;
+    this->email = email;
+    next = NULL;
+}
+
+// EMAILQUEUE
+
+EmailQueue::EmailQueue(){
+    front = rear = NULL;
+}
+
+bool EmailQueue::isEmpty(){
+    if(front == NULL && rear == NULL){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+void EmailQueue::enqueue(int accountNumber, string name, string email){
+    EmailNode *e = new EmailNode(accountNumber, name, email);
+    if(isEmpty()){
+        front = rear = e;
+    }else{
+        rear->next = e;
+        rear = e;
+    }
+}
+
+void EmailQueue::dequeue(){
+    if(isEmpty()){
+        return;
+    }
+    if(front == rear){
+        delete front;
+        front = rear = NULL;
+    }else{
+        EmailNode *temp = front;
+        front = front->next;
+        delete temp;
+    }
+}
+
+void EmailQueue::printQueue(){
+    if(!isEmpty()){
+        EmailNode *temp = front;
+        while(temp != NULL){
+            cout << temp->accountNumber << "  " << temp->name << "  " << temp->email << endl;
+            temp = temp->next;
+        }
+    }
+    cout << endl;
 }
