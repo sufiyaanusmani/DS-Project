@@ -81,10 +81,14 @@ public:
     void searchByProvince(string);
     void searchByPropertyID(int);
     bool propertyExists(int);
-    void buy();
-    void deleteProperty(int);
+    // void buy();
+    void sellProperty(int, int);
+    void deleteFirstNode();
+    void deleteLastNode();
+    void deleteNode(int);
     void updateData();
 };
+Properties properties;
 
 class User
 {
@@ -144,6 +148,47 @@ public:
     void updateContactNumber(int);
     void changePassword(int);
     void addData();
+    void buy();
+};
+
+class Stack{
+    private:
+        Property *top;
+    public:
+        Stack(){
+            top = NULL;
+        }
+
+        bool isEmpty(){
+            if(top == NULL){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        void push(Property *p){
+            p->next = top;
+            top = p;
+        }
+
+        void pop(){
+            if(isEmpty()){
+                return;
+            }
+            Property *temp = top;
+            top = top->next;
+            delete temp;
+        }
+
+        Property *peek(){
+            if(isEmpty()){
+                return NULL;
+            }
+            return top;
+        }
+
+        
 };
 
 // class Admin : public User
@@ -177,12 +222,9 @@ public:
 
 int main()
 {
-    Properties properties;
     int mainMenuChoice;
     properties.readCSV();
     Customer customer;
-    properties.buy();
-    // customer.storeData();
     // init();
     while (1)
     {
@@ -202,35 +244,29 @@ int main()
             break;
         case 3:
             system("cls");
-            system("title Buy");
-            // properties.buy();
+            system("title Predict");
+            // properties.predict();
             break;
         case 4:
             system("cls");
-            system("title Rent");
-            // properties.rent();
+            system("title Login as user");
+            customer.login();
             break;
         case 5:
             system("cls");
-            system("title Predice");
-            // properties.predict();
-            break;
+            system("title Login as admin");
+            // admin.login();
         case 6:
-            system("cls");
-            system("title Login");
-            customer.login();
-            break;
-        case 7:
             system("cls");
             system("title Create new account");
             customer.createNewAccount();
             break;
-        case 8:
+        case 7:
             system("cls");
             system("title About us");
             aboutUs();
             break;
-        case 9:
+        case 8:
             system("cls");
             CursorPosition(40, 10);
             system("title Good Bye");
@@ -396,19 +432,17 @@ int mainMenu()
     CursorPosition(33, 6);
     cout << "2. View all properties";
     CursorPosition(33, 7);
-    cout << "3. Buy";
+    cout << "3. Predict Price";
     CursorPosition(33, 8);
-    cout << "4. Rent";
+    cout << "4. Login as user";
     CursorPosition(33, 9);
-    cout << "5. Predict Price";
+    cout << "5. Login as admin";
     CursorPosition(33, 10);
-    cout << "6. Login";
+    cout << "6. Create new account";
     CursorPosition(33, 11);
-    cout << "7. Create new account";
+    cout << "7. About Us";
     CursorPosition(33, 12);
-    cout << "8. About Us";
-    CursorPosition(33, 13);
-    cout << "9. Exit";
+    cout << "8. Exit";
     CursorPosition(32, 15);
     cout << "Enter your choice: ";
     fflush(stdin);
@@ -807,24 +841,9 @@ bool Properties::propertyExists(int ID){
     return false;
 }
 
-void Properties::buy(){
-    int propID;
-    while(1){
-        cout << "Enter property ID (-1 to go back): ";
-        fflush(stdin);
-        cin >> propID;
-        if(propertyExists(propID)){
-            deleteProperty(propID);
-            cout << "Property bought successfully" << endl;
-            Sleep(1000);
-            return;
-        }
-    }
-    cout << "This property does not exists" << endl;
-    Sleep(1000);
-}
 
-void Properties::deleteProperty(int propID){
+
+void Properties::sellProperty(int propID, int buyer){
      // Open FIle pointers
     fstream fin, fout, sold;
   
@@ -864,10 +883,6 @@ void Properties::deleteProperty(int propID){
         int row_size = row.size();
         id = stoi(row[0]);
   
-        // writing all records,
-        // except the record to be deleted,
-        // into the new file 'reportcardnew.csv'
-        // using fout pointer
         if (id != propID) {
             if (!fin.eof()) {
                 for (i = 0; i < row_size - 1; i++) {
@@ -879,10 +894,10 @@ void Properties::deleteProperty(int propID){
         else {
             count = 1;
             sold.open("./data/sold.csv", ios::out | ios::app);
-            for(int i=0;i<row_size-1;i++){
+            for(int i=0;i<row_size;i++){
                 sold << row[i] << ",";
             }
-            sold << row[row_size - 1] << "\n";
+            sold << buyer << "\n";
             sold.close();
         }
         if (fin.eof())
@@ -906,6 +921,64 @@ void Properties::deleteProperty(int propID){
 
 void Properties::updateData(){
 
+}
+
+void Properties::deleteNode(int propID){
+    if(isEmpty()){
+        return;
+    }else{
+        if(head->propertyID == propID){
+            deleteFirstNode();
+        }else{
+            Property *temp = head;
+            do{
+                temp = temp->next;
+            }while(temp != head && temp->propertyID != propID);
+            if(temp->propertyID == propID){
+                if(temp == tail){
+                    deleteLastNode();
+                }else{
+                    temp->prev->next = temp->next;
+                    temp->next->prev = temp->prev;
+                    delete temp;
+                }
+            }
+        }
+    }
+}
+
+void Properties::deleteFirstNode(){
+    if(isEmpty()){
+        return;
+    }else{
+        if(head == tail){
+            delete head;
+            head = tail = NULL;
+        }else{
+            Property *temp = head;
+            head = head->next;
+            tail->next = head;
+            head->prev = tail;
+            delete temp;
+        }
+    }
+}
+
+void Properties::deleteLastNode(){
+    if(isEmpty()){
+        return;
+    }else{
+        if(head == tail){
+            delete head;
+            head = tail = NULL;
+        }else{
+            Property *temp = tail;
+            tail = tail->prev;
+            tail->next = head;
+            head->prev = tail;
+            delete temp;
+        }
+    }
 }
 
 // USER
@@ -1374,22 +1447,23 @@ void Customer::portal()
             break;
         case 2:
             system("cls");
-            system("title DEPOSIT AMOUNT");
-            // depositAmount();
+            system("title SEARCH");
+            properties.search();
             break;
         case 3:
             system("cls");
-            system("title WITHDRAW AMOUNT");
-            // withdrawAmount();
+            system("title VIEW ALL PROPERTIES");
+            properties.print();
+            getch();
             break;
         case 4:
             system("cls");
-            system("title TRANSFER AMOUNT");
-            // transferAmount();
+            system("title BUY");
+            Customer::buy();
             break;
         case 5:
             system("cls");
-            system("title VIEW TRANSACTION HISTORY");
+            system("title RENT");
             // t.viewTransactionHistoryCustomer(accNo);
             break;
         case 6:
@@ -1450,18 +1524,20 @@ int Customer::portalMenu()
     CursorPosition(33, 7);
     cout << "1. View my information";
     CursorPosition(33, 9);
-    cout << "2. Deposit Money";
+    cout << "2. Search";
     CursorPosition(33, 11);
-    cout << "3. Withdraw Money";
+    cout << "3. View all properties";
     CursorPosition(33, 13);
-    cout << "4. Transfer Money";
+    cout << "4. Buy";
     CursorPosition(33, 15);
-    cout << "5. View My Transaction History";
+    cout << "5. Rent";
     CursorPosition(33, 17);
-    cout << "6. Account Settings";
+    cout << "6. Predict Price";
     CursorPosition(33, 19);
-    cout << "7. Logout";
-    CursorPosition(32, 22);
+    cout << "7. Account Settings";
+    CursorPosition(33, 21);
+    cout << "8. Logout";
+    CursorPosition(32, 24);
     TextColor(5);
     cout << "Enter your choice: ";
     fflush(stdin);
@@ -1642,4 +1718,25 @@ void Customer::changePassword(int accNo)
         setPassword();
         Customer::updateInfo(accNo);
     }
+}
+
+void Customer::buy(){
+    int propID;
+    while(1){
+        cout << "Enter property ID (-1 to go back): ";
+        fflush(stdin);
+        cin >> propID;
+        if(propID == -1){
+            return;
+        }
+        if(properties.propertyExists(propID)){
+            properties.sellProperty(propID, accountNumber);
+            cout << "Property bought successfully" << endl;
+            properties.deleteNode(propID);
+            Sleep(1000);
+            return;
+        }
+    }
+    cout << "This property does not exists" << endl;
+    Sleep(1000);
 }
