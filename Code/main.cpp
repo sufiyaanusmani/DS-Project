@@ -94,6 +94,11 @@ public:
     int partition(Property *, int, int);
     void quickSort(Property *, int, int);
     void sort(string);
+    void filterByPrice(long long int, long long int);
+    void filterByArea(long double, long double);
+    void filterByBeds(int);
+    void filterByType(string);
+    void filterByCity(string);
 };
 Properties properties;
 
@@ -236,7 +241,10 @@ int main()
     string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
     // customer.sendEmailToAll(subject, content);
     // generateReport("properties");
-    properties.sort("descending");
+    // properties.sort("descending");
+    // properties.filterByPrice(10000, 5000000);
+    // properties.filterByBeds(2);
+    // properties.filterByCity("Lahore");
     getch();
     // init();
     while (1)
@@ -1073,6 +1081,66 @@ int Properties::partition(Property *arr, int low, int high)
     arr[i+1] = arr[high];
     arr[high] = temp;
     return (i + 1);
+}
+
+void Properties::filterByPrice(long long int from, long long int to){
+    Property *temp = head;
+    Properties filter;
+    do{
+        if(temp->price >= from && temp->price <= to){
+            filter.append(temp->propertyID, temp->locationID, temp->pageUrl, temp->propertyType, temp->price, temp->priceType, temp->location, temp->city, temp->province, temp->locality, temp->latitude, temp->longitude, temp->baths, temp->area, temp->areaMarla, temp->areaSqft, temp->purpose, temp->bedrooms, temp->dateAdded, temp->year, temp->month, temp->day);
+        }
+        temp = temp->next;
+    }while(temp != head);
+    filter.print();
+}
+
+void Properties::filterByArea(long double from, long double to){
+    Property *temp = head;
+    Properties filter;
+    do{
+        if(temp->areaSqft >= from && temp->areaSqft <= to){
+            filter.append(temp->propertyID, temp->locationID, temp->pageUrl, temp->propertyType, temp->price, temp->priceType, temp->location, temp->city, temp->province, temp->locality, temp->latitude, temp->longitude, temp->baths, temp->area, temp->areaMarla, temp->areaSqft, temp->purpose, temp->bedrooms, temp->dateAdded, temp->year, temp->month, temp->day);
+        }
+        temp = temp->next;
+    }while(temp != head);
+    filter.print();
+}
+
+void Properties::filterByBeds(int beds){
+    Property *temp = head;
+    Properties filter;
+    do{
+        if(temp->bedrooms == beds){
+            filter.append(temp->propertyID, temp->locationID, temp->pageUrl, temp->propertyType, temp->price, temp->priceType, temp->location, temp->city, temp->province, temp->locality, temp->latitude, temp->longitude, temp->baths, temp->area, temp->areaMarla, temp->areaSqft, temp->purpose, temp->bedrooms, temp->dateAdded, temp->year, temp->month, temp->day);
+        }
+        temp = temp->next;
+    }while(temp != head);
+    filter.print();
+}
+
+void Properties::filterByType(string type){
+    Property *temp = head;
+    Properties filter;
+    do{
+        if(temp->propertyType == type){
+            filter.append(temp->propertyID, temp->locationID, temp->pageUrl, temp->propertyType, temp->price, temp->priceType, temp->location, temp->city, temp->province, temp->locality, temp->latitude, temp->longitude, temp->baths, temp->area, temp->areaMarla, temp->areaSqft, temp->purpose, temp->bedrooms, temp->dateAdded, temp->year, temp->month, temp->day);
+        }
+        temp = temp->next;
+    }while(temp != head);
+    filter.print();
+}
+
+void Properties::filterByCity(string city){
+    Property *temp = head;
+    Properties filter;
+    do{
+        if(temp->city == city){
+            filter.append(temp->propertyID, temp->locationID, temp->pageUrl, temp->propertyType, temp->price, temp->priceType, temp->location, temp->city, temp->province, temp->locality, temp->latitude, temp->longitude, temp->baths, temp->area, temp->areaMarla, temp->areaSqft, temp->purpose, temp->bedrooms, temp->dateAdded, temp->year, temp->month, temp->day);
+        }
+        temp = temp->next;
+    }while(temp != head);
+    filter.print();
 }
 
 // USER
