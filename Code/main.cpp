@@ -1,22 +1,12 @@
 // Compile using:  g++ -std=c++11 main.cpp -o main.exe && ./main.exe
 
-#include <iostream>
-#include <cstring>
-#include <string>
 #include <string.h>
-#include <cstdlib>
 #include <time.h>
 #include <conio.h>
 #include <stdio.h>
-#include <fstream>
 #include <windows.h>
 #include <ctype.h>
-#include <iomanip>
-#include <cwchar>
-#include <vector>
-#include <sstream>
-#include <typeinfo>
-#include <stdexcept>
+#include <bits/stdc++.h>
 using namespace std;
 
 string convertToString(char *);
@@ -227,8 +217,8 @@ int main()
     Customer customer;
     string subject = "FAST Properties - Automated Email";
     string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
-    customer.sendEmailToAll(subject, content);
-    getch();
+//    customer.sendEmailToAll(subject, content);
+//    getch();
     // init();
     while (1)
     {
