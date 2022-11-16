@@ -4,6 +4,7 @@
 #include <cstring>
 #include <string>
 #include <string.h>
+#include <cstring>
 #include <cstdlib>
 #include <time.h>
 #include <conio.h>
@@ -28,6 +29,7 @@ void currentDateAndTime();
 void TextColor(int);
 void loadingAnimation();
 void CursorPosition(int, int);
+void generateReport(string);
 
 class Property
 {
@@ -227,7 +229,8 @@ int main()
     Customer customer;
     string subject = "FAST Properties - Automated Email";
     string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
-    customer.sendEmailToAll(subject, content);
+    // customer.sendEmailToAll(subject, content);
+    generateReport("properties");
     getch();
     // init();
     while (1)
@@ -1880,4 +1883,10 @@ string EmailQueue::getFrontEmail(){
     if(!isEmpty()){
         return (front->email);
     }
+}
+
+void generateReport(string arg){
+    string command = "python ./python-generate-report/app.py " + arg;
+    const char* str = command.c_str();
+    system(str);
 }
