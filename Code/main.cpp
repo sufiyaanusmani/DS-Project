@@ -60,6 +60,7 @@ public:
     Property *next;
     Property *prev;
 
+    Property();
     Property(long long int, long int, string, string, long long int, string, string, string, string, string, long double, long double, int, string, float, long double, string, int, string, int, int, int);
     void print();
 };
@@ -75,6 +76,7 @@ public:
     Properties();
     bool isEmpty();
     void append(long long int, long int, string, string, long long int, string, string, string, string, string, long double, long double, int, string, float, long double, string, int, string, int, int, int);
+    void prepend(long long int, long int, string, string, long long int, string, string, string, string, string, long double, long double, int, string, float, long double, string, int, string, int, int, int);
     void print();
     int count();
     void readCSV();
@@ -89,6 +91,9 @@ public:
     void deleteLastNode();
     void deleteNode(int);
     void updateData();
+    int partition(Property *, int, int);
+    void quickSort(Property *, int, int);
+    void sort(string);
 };
 Properties properties;
 
@@ -230,7 +235,8 @@ int main()
     string subject = "FAST Properties - Automated Email";
     string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
     // customer.sendEmailToAll(subject, content);
-    generateReport("properties");
+    // generateReport("properties");
+    properties.sort("descending");
     getch();
     // init();
     while (1)
@@ -582,6 +588,10 @@ void aboutUs()
 
 // PROPERTY
 
+Property::Property(){
+    next = prev = NULL;
+}
+
 Property::Property(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price, string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day)
 {
     this->propertyID = propertyID;
@@ -650,6 +660,23 @@ void Properties::append(long long int propertyID, long int locationID, string pa
     }
 }
 
+void Properties::prepend(long long int propertyID, long int locationID, string pageUrl, string propertyType, long long int price, string priceType, string location, string city, string province, string locality, long double latitude, long double longitude, int baths, string area, float areaMarla, long double areaSqft, string purpose, int bedrooms, string dateAdded, int year, int month, int day)
+{
+    Property *n = new Property(propertyID, locationID, pageUrl, propertyType, price, priceType, location, city, province, locality, latitude, longitude, baths, area, areaMarla, areaSqft, purpose, bedrooms, dateAdded, year, month, day);
+    if (isEmpty())
+    {
+        head = tail = n;
+    }
+    else
+    {
+        n->next = head;
+        n->prev = tail;
+        tail->next = n;
+        head->prev = n;
+        head = n;
+    }
+}
+
 void Properties::print()
 {
     if (isEmpty())
@@ -679,6 +706,7 @@ int Properties::count()
             temp = temp->next;
         } while (temp != head);
     }
+    return count;
 }
 
 void Properties::readCSV()
@@ -986,6 +1014,65 @@ void Properties::deleteLastNode(){
             delete temp;
         }
     }
+}
+
+void Properties::sort(string type){
+    Properties sorted;
+    int n = count();
+    Property *arr = new Property[n];
+    Property *temp = head;
+    for(int i=0;i<n;i++){
+        arr[i] = *temp;
+        temp = temp->next;
+    }
+    quickSort(arr, 0, n-1);
+    for(int i=0;i<n;i++){
+        if(type == "descending"){
+            sorted.append(arr[i].propertyID, arr[i].locationID, arr[i].pageUrl, arr[i].propertyType, arr[i].price, arr[i].priceType, arr[i].location, arr[i].city, arr[i].province, arr[i].locality, arr[i].latitude, arr[i].longitude, arr[i].baths, arr[i].area, arr[i].areaMarla, arr[i].areaSqft, arr[i].purpose, arr[i].bedrooms, arr[i].dateAdded, arr[i].year, arr[i].month, arr[i].day);
+        }else{
+            sorted.prepend(arr[i].propertyID, arr[i].locationID, arr[i].pageUrl, arr[i].propertyType, arr[i].price, arr[i].priceType, arr[i].location, arr[i].city, arr[i].province, arr[i].locality, arr[i].latitude, arr[i].longitude, arr[i].baths, arr[i].area, arr[i].areaMarla, arr[i].areaSqft, arr[i].purpose, arr[i].bedrooms, arr[i].dateAdded, arr[i].year, arr[i].month, arr[i].day);
+        }
+    }
+    delete[] arr;
+    sorted.print();
+}
+
+void Properties::quickSort(Property *arr, int low, int high)
+{
+    if (low < high) {
+        /* pi is partitioning index, arr[p] is now
+        at right place */
+        int pi = partition(arr, low, high);
+  
+        // Separately sort elements before
+        // partition and after partition
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+int Properties::partition(Property *arr, int low, int high)
+{
+    int pivot = arr[high].price; // pivot
+    Property temp;
+    int i
+        = (low
+           - 1); // Index of smaller element and indicates
+                 // the right position of pivot found so far
+  
+    for (int j = low; j <= high - 1; j++) {
+        // If current element is smaller than the pivot
+        if (arr[j].price < pivot) {
+            i++; // increment index of smaller element
+            temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+    temp = arr[i+1];
+    arr[i+1] = arr[high];
+    arr[high] = temp;
+    return (i + 1);
 }
 
 // USER
