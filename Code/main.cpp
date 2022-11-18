@@ -885,9 +885,8 @@ bool Properties::propertyExists(int ID){
 }
 
 
-
 void Properties::sellProperty(int propID, int buyer, string name){
-     // Open FIle pointers
+     // Open File pointers
     fstream fin, fout, sold;
   
     // Open the existing file
