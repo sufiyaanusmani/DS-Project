@@ -81,9 +81,9 @@ public:
     int count();
     void readCSV();
     void search();
-    void searchByCity(string);
-    void searchByProvince(string);
-    void searchByPropertyID(int);
+    Properties searchByCity(string);
+    Properties searchByProvince(string);
+    Properties searchByPropertyID(int);
     bool propertyExists(int);
     // void buy();
     void sellProperty(int, int, string);
@@ -94,11 +94,11 @@ public:
     int partition(Property *, int, int);
     void quickSort(Property *, int, int);
     void sort(string);
-    void filterByPrice(long long int, long long int);
-    void filterByArea(long double, long double);
-    void filterByBeds(int);
-    void filterByType(string);
-    void filterByCity(string);
+    Properties filterByPrice(long long int, long long int);
+    Properties filterByArea(long double, long double);
+    Properties filterByBeds(int);
+    Properties filterByType(string);
+    Properties filterByCity(string);
 };
 Properties properties;
 
@@ -833,44 +833,44 @@ void Properties::search(){
     
 }
 
-void Properties::searchByCity(string city){
+Properties Properties::searchByCity(string city){
     // Linear Search
     Property *p = head;
+    Properties temp;
     do{
         if(p->city == city){
-            p->print();
+            temp.append(p->propertyID, p->locationID, p->pageUrl, p->propertyType, p->price, p->priceType, p->location, p->city, p->province, p->locality, p->latitude, p->longitude, p->baths, p->area, p->areaMarla, p->areaSqft, p->purpose, p->bedrooms, p->dateAdded, p->year, p->month, p->day);
         }
         p = p->next;
     }while(p != head);
-    cout << "Press any key to continue...";
-    getch();
+    return temp;
 }
 
-void Properties::searchByProvince(string province){
+Properties Properties::searchByProvince(string province){
     // Linear Search
     Property *p = head;
+    Properties temp;
     do{
         if(p->province == province){
-            p->print();
+            temp.append(p->propertyID, p->locationID, p->pageUrl, p->propertyType, p->price, p->priceType, p->location, p->city, p->province, p->locality, p->latitude, p->longitude, p->baths, p->area, p->areaMarla, p->areaSqft, p->purpose, p->bedrooms, p->dateAdded, p->year, p->month, p->day);
         }
         p = p->next;
     }while(p != head);
-    cout << "Press any key to continue...";
-    getch();
+    return temp;
 }
 
-void Properties::searchByPropertyID(int ID){
+Properties Properties::searchByPropertyID(int ID){
     // Linear Search
     Property *p = head;
+    Properties temp;
     do{
         if(p->propertyID == ID){
-            p->print();
+            temp.append(p->propertyID, p->locationID, p->pageUrl, p->propertyType, p->price, p->priceType, p->location, p->city, p->province, p->locality, p->latitude, p->longitude, p->baths, p->area, p->areaMarla, p->areaSqft, p->purpose, p->bedrooms, p->dateAdded, p->year, p->month, p->day);
             break;
         }
         p = p->next;
     }while(p != head);
-    cout << "Press any key to continue...";
-    getch();
+    return temp;
 }
 
 bool Properties::propertyExists(int ID){
@@ -1082,7 +1082,7 @@ int Properties::partition(Property *arr, int low, int high)
     return (i + 1);
 }
 
-void Properties::filterByPrice(long long int from, long long int to){
+Properties Properties::filterByPrice(long long int from, long long int to){
     Property *temp = head;
     Properties filter;
     do{
@@ -1091,10 +1091,10 @@ void Properties::filterByPrice(long long int from, long long int to){
         }
         temp = temp->next;
     }while(temp != head);
-    filter.print();
+    return filter;
 }
 
-void Properties::filterByArea(long double from, long double to){
+Properties Properties::filterByArea(long double from, long double to){
     Property *temp = head;
     Properties filter;
     do{
@@ -1103,10 +1103,10 @@ void Properties::filterByArea(long double from, long double to){
         }
         temp = temp->next;
     }while(temp != head);
-    filter.print();
+    return filter;
 }
 
-void Properties::filterByBeds(int beds){
+Properties Properties::filterByBeds(int beds){
     Property *temp = head;
     Properties filter;
     do{
@@ -1115,10 +1115,10 @@ void Properties::filterByBeds(int beds){
         }
         temp = temp->next;
     }while(temp != head);
-    filter.print();
+    return filter;
 }
 
-void Properties::filterByType(string type){
+Properties Properties::filterByType(string type){
     Property *temp = head;
     Properties filter;
     do{
@@ -1127,10 +1127,10 @@ void Properties::filterByType(string type){
         }
         temp = temp->next;
     }while(temp != head);
-    filter.print();
+    return filter;
 }
 
-void Properties::filterByCity(string city){
+Properties Properties::filterByCity(string city){
     Property *temp = head;
     Properties filter;
     do{
@@ -1139,7 +1139,7 @@ void Properties::filterByCity(string city){
         }
         temp = temp->next;
     }while(temp != head);
-    filter.print();
+    return filter;
 }
 
 // USER
