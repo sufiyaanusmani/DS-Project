@@ -99,6 +99,7 @@ public:
     Properties filterByBeds(int);
     Properties filterByType(string);
     Properties filterByCity(string);
+    long long int predictPrice(string, string, int, long double, int, int);
 };
 Properties properties;
 
@@ -236,6 +237,7 @@ int main()
 {
     int mainMenuChoice;
     properties.readCSV();
+    cout << properties.predictPrice("Flat", "Lahore", 2, 1800, 3, 2021);
     Customer customer;
     string subject = "FAST Properties - Automated Email";
     string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
@@ -1140,6 +1142,63 @@ Properties Properties::filterByCity(string city){
         temp = temp->next;
     }while(temp != head);
     return filter;
+}
+
+long long int Properties::predictPrice(string propertyType, string city, int baths, long double area, int bedrooms, int year){
+    Properties searched = searchByCity(city);
+    int propType, c;
+
+    // storing data in csv file
+    fstream fout;
+    fout.open("./python-predict/data.csv", ios::out);
+    fout << "property_type,price,city,bath,area_sqft,bedrooms,year" << endl;
+    Property *temp = searched.head;
+    do{
+        propType = 1;   // house
+        if(temp->propertyType == "Flat"){
+            propType = 2;
+        }
+        if(temp->city == "Karachi"){
+            c = 1;
+        }else if(temp->city == "Lahore"){
+            c = 2;
+        }
+        fout << propType << "," << temp->price << "," << c << "," << temp->baths << "," << temp->areaSqft << "," << temp->bedrooms << "," << temp->year << endl;
+        temp = temp->next;
+    }while(temp != searched.head);
+    fout.close();
+
+    // calling python program to do prediction
+    propType = 1;   // house
+    if(propertyType == "Flat"){
+        propType = 2;
+    }
+    if(city == "Karachi"){
+        c = 1;
+    }else if(city == "Lahore"){
+        c = 2;
+    }
+    string command = "python ./python-predict/app.py " + to_string(propType);
+    command = command + " ";
+    command = command + to_string(c);
+    command = command + " ";
+    command = command + to_string(baths);
+    command = command + " ";
+    command = command + to_string(area);
+    command = command + " ";
+    command = command + to_string(bedrooms);
+    command = command + " ";
+    command = command + to_string(year);
+    const char* str = command.c_str();
+    system(str);
+
+    // reading the predicted price
+    fstream fin;
+    fin.open("./python-predict/price.txt", ios::in);
+    long long int predictedPrice;
+    fin >> predictedPrice;
+    fin.close();
+    return predictedPrice;
 }
 
 // USER
