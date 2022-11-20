@@ -237,7 +237,7 @@ int main()
 {
     int mainMenuChoice;
     properties.readCSV();
-    cout << properties.predictPrice("Flat", "Lahore", 2, 1800, 3, 2021);
+    cout << properties.predictPrice("Flat", "Lahore", 2, 2800, 3, 2021);
     Customer customer;
     string subject = "FAST Properties - Automated Email";
     string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
@@ -294,7 +294,7 @@ int main()
             CursorPosition(40, 10);
             system("title Good Bye");
             box();
-            Sleep(2000);
+            // Sleep(2000);
             TextColor(7);
             exit(0);
             break;
