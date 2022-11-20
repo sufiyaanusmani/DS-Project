@@ -100,6 +100,7 @@ public:
     Properties filterByType(string);
     Properties filterByCity(string);
     long long int predictPrice(string, string, int, long double, int, int);
+    void generateGraphs(int);
 };
 Properties properties;
 
@@ -237,7 +238,8 @@ int main()
 {
     int mainMenuChoice;
     properties.readCSV();
-    cout << properties.predictPrice("Flat", "Lahore", 2, 2800, 3, 2021);
+    // cout << properties.predictPrice("Flat", "Lahore", 2, 2800, 3, 2021);
+    properties.generateGraphs(2019);
     Customer customer;
     string subject = "FAST Properties - Automated Email";
     string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
@@ -1199,6 +1201,22 @@ long long int Properties::predictPrice(string propertyType, string city, int bat
     fin >> predictedPrice;
     fin.close();
     return predictedPrice;
+}
+
+void Properties::generateGraphs(int year){
+    fstream fout;
+    fout.open("./python-graphs/data.csv", ios::out);
+    fout << "property_type,price,city,bath,area_sqft,bedrooms,year,month,price_type" << endl;
+    Property *temp = head;
+    do{
+        if(temp->year == year){
+            fout << temp->propertyType << "," << temp->price << "," <<  temp->city << "," << temp->baths << "," << temp->areaSqft << "," << temp->bedrooms << "," << temp->year << "," << temp->month << "," << temp->priceType << endl;
+        }
+        temp = temp->next;
+    }while(temp != head);
+    fout.close();
+
+    system("python ./python-graphs/app.py");
 }
 
 // USER
