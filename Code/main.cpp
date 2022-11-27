@@ -251,7 +251,7 @@ int main()
     // properties.filterByPrice(10000, 5000000);
     // properties.filterByBeds(2);
     // properties.filterByCity("Lahore");
-    getch();
+    // getch();
     // init();
     while (1)
     {
