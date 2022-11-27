@@ -164,6 +164,7 @@ public:
     void addData();
     void buy();
     void sendEmailToAll(string, string);
+    void sendEmail(string, string, string);
 };
 
 class Stack{
@@ -239,10 +240,11 @@ int main()
     int mainMenuChoice;
     properties.readCSV();
     // cout << properties.predictPrice("Flat", "Lahore", 2, 2800, 3, 2021);
-    properties.generateGraphs(2019);
+    // properties.generateGraphs(2019);
     Customer customer;
     string subject = "FAST Properties - Automated Email";
     string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
+    customer.sendEmail("k213195@nu.edu.pk", "Subject", "This is a content");
     // customer.sendEmailToAll(subject, content);
     // generateReport("properties");
     // properties.sort("descending");
@@ -2015,6 +2017,23 @@ void Customer::sendEmailToAll(string subject, string content){
     }
 
 
+}
+
+void Customer::sendEmail(string email, string subject, string content){
+    ofstream fout;
+    fout.open("./python-email/subject.txt", ios::out);
+    fout << subject;
+    fout.close();
+
+    fout.open("./python-email/content.txt", ios::out);
+    fout << content;
+    fout.close();
+
+    fout.open("./python-email/receiver.txt", ios::out);
+    fout << email;
+    fout.close();
+
+    system("python send_email.py");
 }
 
 // STACK
