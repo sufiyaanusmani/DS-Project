@@ -130,7 +130,7 @@ public:
     virtual void storeData() = 0;
     void readData();
     void setAge();
-    virtual void login() = 0;
+    virtual bool login(int, char [20]) = 0;
     virtual void viewMyInfo() = 0;
     virtual void portal() = 0;
     virtual int portalMenu() = 0;
@@ -150,7 +150,7 @@ private:
 public:
     void createNewAccount();
     void viewTransactionHistory();
-    void login();
+    bool login(int, char [20]);
     void viewMyInfo();
     void portal();
     int portalMenu();
@@ -244,7 +244,7 @@ int main()
     Customer customer;
     string subject = "FAST Properties - Automated Email";
     string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
-    customer.sendEmail("k213195@nu.edu.pk", "Subject", "This is a content");
+    // customer.sendEmail("k213195@nu.edu.pk", "Subject", "This is a content");
     // customer.sendEmailToAll(subject, content);
     // generateReport("properties");
     // properties.sort("descending");
@@ -277,7 +277,8 @@ int main()
         case 4:
             system("cls");
             system("title Login as user");
-            customer.login();
+            cout << customer.login(107722, "sufiyaan");
+            getch();
             break;
         case 5:
             system("cls");
@@ -1557,12 +1558,9 @@ void Customer::storeData()
     fout.close();
 }
 
-void Customer::login()
+bool Customer::login(int id, char pass[20])
 {
-    int id;
-    char pass[20];
     bool idFound = false;
-    bool passFound = false;
     ifstream fin;
     fin.open("./data/customer.bank", ios::in | ios::binary);
     if (!fin)
@@ -1572,49 +1570,26 @@ void Customer::login()
     }
     else
     {
-        cout << "Enter account number: ";
-        TextColor(1);
-        fflush(stdin);
-        cin >> id;
-        TextColor(7);
         fin.read((char *)this, sizeof(*this));
         while (fin.eof() == 0)
         {
             if (id == this->accountNumber)
             {
                 idFound = true;
-                cout << "Enter your password: ";
-                inputPassword(pass);
                 if (strcmp(password, pass) == 0)
                 {
-                    passFound = true;
                     fin.close();
-                    loadingAnimation();
-                    Customer::portal();
+                    return true;
                 }
                 else
                 {
-                    TextColor(4);
-                    cout << "\n\t\t\t\t\tWrong password" << endl;
-                    TextColor(7);
-                    Sleep(1000);
+                    return false;
                 }
-                break;
             }
             fin.read((char *)this, sizeof(*this));
         }
-        if (idFound == false)
-        {
-            cout << "\n\t\t\t\t\t\t";
-            TextColor(4);
-            cout << "This ID does not exists" << endl;
-            Sleep(1000);
-            TextColor(1);
-            cout << "You are redirected to the main menu...";
-            Sleep(1000);
-            loadingAnimation();
-        }
         fin.close();
+        return false;
     }
 }
 
