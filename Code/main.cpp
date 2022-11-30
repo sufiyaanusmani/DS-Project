@@ -117,7 +117,7 @@ protected:
     void inputPassword(char[20]);
 
 public:
-    virtual void createNewAccount() = 0;
+    virtual void createNewAccount(char [20], int, char, char [30], char[20]) = 0;
     void setName();
     void setGender();
     void setEmail();
@@ -130,7 +130,7 @@ public:
     virtual void storeData() = 0;
     void readData();
     void setAge();
-    virtual bool login(int, char [20]) = 0;
+    virtual bool login(char [30], char [20]) = 0;
     virtual void viewMyInfo() = 0;
     virtual void portal() = 0;
     virtual int portalMenu() = 0;
@@ -148,9 +148,9 @@ private:
     int generateAccountNumber();
 
 public:
-    void createNewAccount();
+    void createNewAccount(char [20], int, char, char [30], char[20]);
     void viewTransactionHistory();
-    bool login(int, char [20]);
+    bool login(char [30], char [20]);
     void viewMyInfo();
     void portal();
     int portalMenu();
@@ -277,7 +277,7 @@ int main()
         case 4:
             system("cls");
             system("title Login as user");
-            cout << customer.login(107722, "sufiyaan");
+            cout << customer.login("k213195@nu.edu.pk", "sufiyaan");
             getch();
             break;
         case 5:
@@ -287,7 +287,6 @@ int main()
         case 6:
             system("cls");
             system("title Create new account");
-            customer.createNewAccount();
             break;
         case 7:
             system("cls");
@@ -1445,65 +1444,16 @@ char *User::getEmail()
 
 // CUSTOMER
 
-void Customer::createNewAccount()
+void Customer::createNewAccount(char n[20], int age, char gender, char e[30], char p[20])
 {
-    char accNo[7];
-    this->accountNumber = generateAccountNumber();
-    setName();
-    system("cls");
-    setGender();
-    system("cls");
-    setAge();
-    system("cls");
-    system("cls");
-    setEmail();
-    system("cls");
-    system("cls");
-    setPassword();
-    system("color 0F");
-    system("cls");
-    TextColor(15);
-    cout << "Account Number  : ";
-    TextColor(9);
-    cout << this->accountNumber << endl;
-    TextColor(15);
-    cout << "Name            : ";
-    TextColor(10);
-    cout << this->name << endl;
-    TextColor(15);
-    cout << "Age             : ";
-    TextColor(10);
-    cout << this->age << endl;
-    TextColor(15);
-    cout << "Email: ";
-    TextColor(10);
-    cout << this->email << endl;
-    TextColor(1);
-    cout << "\nAre your sure you want to create your account: [y/n]: ";
-    std::sprintf(accNo, "%llu", accountNumber);
-    accNo[6] = '\0';
-    char ch, choice;
-    while (1)
-    {
-        ch = getch();
-        if (ch == 'y' || ch == 'Y' || ch == 'n' || ch == 'N')
-        {
-            choice = ch;
-            cout << ch << endl;
-            break;
-        }
-    }
-    cout << endl;
-    system("color 0F");
-    if (choice == 'y' || choice == 'Y')
-    {
-        Customer::storeData();
-        cout << "Account created successfully\n";
-        TextColor(1);
-        cout << "\nYou are redirected to the mainmenu\n";
-        TextColor(0);
-        loadingAnimation();
-    }
+    Customer c;
+    c.accountNumber = c.generateAccountNumber();
+    strcpy(c.name, n);
+    c.age = age;
+    c.gender = gender;
+    strcpy(c.email, e);
+    strcpy(c.password, p);
+    c.storeData();
 }
 
 int Customer::generateAccountNumber()
@@ -1552,13 +1502,12 @@ void Customer::storeData()
     {
         perror("Error");
         Sleep(2000);
-        exit(1);
     }
     fout.write((char *)this, sizeof(*this));
     fout.close();
 }
 
-bool Customer::login(int id, char pass[20])
+bool Customer::login(char e[30], char pass[20])
 {
     bool idFound = false;
     ifstream fin;
@@ -1566,14 +1515,13 @@ bool Customer::login(int id, char pass[20])
     if (!fin)
     {
         cout << "ERROR, file does not exist" << endl;
-        getch();
     }
     else
     {
         fin.read((char *)this, sizeof(*this));
         while (fin.eof() == 0)
         {
-            if (id == this->accountNumber)
+            if (strcmp(e, email) == 0)
             {
                 idFound = true;
                 if (strcmp(password, pass) == 0)
