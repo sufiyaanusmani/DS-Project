@@ -243,7 +243,7 @@ int main()
     // properties.generateGraphs(2019);
     Customer customer;
     string subject = "FAST Properties - Automated Email";
-    string content = "Dear User,<br>This is an automated email for testing purpose<br>DS Project Zindabad<br>Regards,<br>Sufiyaan Usmani";
+    string content = "Dear User,<br>This is an automated email for testing purpose<br>Regards,<br>Sufiyaan Usmani";
     // customer.sendEmail("k213195@nu.edu.pk", "Subject", "This is a content");
     // customer.sendEmailToAll(subject, content);
     // generateReport("properties");
