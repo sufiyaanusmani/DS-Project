@@ -4,13 +4,11 @@ from email.mime.text import MIMEText
 import os
 
 def sendEmail(msg, rec):
-    # sender = "fastnucesbank@gmail.com"
-    # my_password = r"onfhcmtapladsevi"
     sender = "revaluations.properties@gmail.com"
     my_password = r"ututgxeicnivajde"
     content = f'<html><body><h4>{msg}</h4></body></html>'
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = "FAST NUCES Bank"
+    msg['Subject'] = "Revaluations"
     msg['From'] = sender
     msg['To'] = rec
     part2 = MIMEText(content, 'html')

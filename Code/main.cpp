@@ -90,10 +90,9 @@ public:
     void deleteFirstNode();
     void deleteLastNode();
     void deleteNode(int);
-    void updateData();
     int partition(Property *, int, int);
     void quickSort(Property *, int, int);
-    void sort(string);
+    Properties sort(string);
     Properties filterByPrice(long long int, long long int);
     Properties filterByArea(long double, long double);
     Properties filterByBeds(int);
@@ -938,10 +937,6 @@ void Properties::sellProperty(int propID, int buyer, string name){
     rename("temp.csv", "./data/property.csv");
 }
 
-void Properties::updateData(){
-
-}
-
 void Properties::deleteNode(int propID){
     if(isEmpty()){
         return;
@@ -1000,7 +995,7 @@ void Properties::deleteLastNode(){
     }
 }
 
-void Properties::sort(string type){
+Properties Properties::sort(string type){
     Properties sorted;
     int n = count();
     Property *arr = new Property[n];
@@ -1018,7 +1013,7 @@ void Properties::sort(string type){
         }
     }
     delete[] arr;
-    sorted.print();
+    return sorted;
 }
 
 void Properties::quickSort(Property *arr, int low, int high)
