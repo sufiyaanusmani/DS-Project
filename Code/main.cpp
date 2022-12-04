@@ -21,14 +21,6 @@
 using namespace std;
 
 string convertToString(char *);
-void aboutUs();
-int mainMenu();
-void box();
-void FontSize(int, int);
-void currentDateAndTime();
-void TextColor(int);
-void loadingAnimation();
-void CursorPosition(int, int);
 void generateReport(string);
 
 class Property
@@ -113,14 +105,9 @@ protected:
     char email[30];
     char password[20];
     virtual int generateAccountNumber() = 0;
-    void inputPassword(char[20]);
 
 public:
     virtual void createNewAccount(char [20], int, char, char [30], char[20]) = 0;
-    void setName();
-    void setGender();
-    void setEmail();
-    void setPassword();
     char *getName();
     int getAccountNumber();
     char getGender();
@@ -128,17 +115,7 @@ public:
     char *getEmail();
     virtual void storeData() = 0;
     void readData();
-    void setAge();
     virtual bool login(char [30], char [20]) = 0;
-    virtual void viewMyInfo() = 0;
-    virtual void portal() = 0;
-    virtual int portalMenu() = 0;
-    virtual void deleteAccount() = 0;
-    virtual void accountSetting() = 0;
-    virtual void updateEmail(int) = 0;
-    virtual void updateInfo(int) = 0;
-    virtual void updateContactNumber(int) = 0;
-    virtual void changePassword(int) = 0;
 };
 
 class Customer : public User
@@ -148,35 +125,12 @@ private:
 
 public:
     void createNewAccount(char [20], int, char, char [30], char[20]);
-    void viewTransactionHistory();
     bool login(char [30], char [20]);
-    void viewMyInfo();
-    void portal();
-    int portalMenu();
     void storeData();
-    void deleteAccount();
-    void accountSetting();
-    void updateEmail(int);
-    void updateInfo(int);
-    void updateContactNumber(int);
-    void changePassword(int);
     void addData();
     void buy();
     void sendEmailToAll(string, string);
     void sendEmail(string, string, string);
-};
-
-class Stack{
-    private:
-        Property *top;
-    public:
-        Stack();
-        bool isEmpty();
-        void push(Property *p);
-        void pop();
-        Property *peek();
-
-
 };
 
 class EmailNode{
@@ -207,83 +161,7 @@ class EmailQueue{
 
 int main()
 {
-    int mainMenuChoice;
-    properties.readCSV();
-    // cout << properties.predictPrice("Flat", "Lahore", 2, 2800, 3, 2021);
-    // properties.generateGraphs(2019);
-    Customer customer;
-    string subject = "FAST Properties - Automated Email";
-    string content = "Dear User,<br>This is an automated email for testing purpose<br>Regards,<br>Sufiyaan Usmani";
-    // customer.sendEmail("k213195@nu.edu.pk", "Subject", "This is a content");
-    // customer.sendEmailToAll(subject, content);
-    // generateReport("properties");
-    // properties.sort("descending");
-    // properties.filterByPrice(10000, 5000000);
-    // properties.filterByBeds(2);
-    // properties.filterByCity("Lahore");
-    // getch();
-    // init();
-    while (1)
-    {
-        system("cls");
-        mainMenuChoice = mainMenu();
-        switch (mainMenuChoice)
-        {
-        case 1:
-            system("cls");
-            system("title Search");
-            properties.search();
-            break;
-        case 2:
-            system("cls");
-            system("title Properties");
-            properties.print();
-            break;
-        case 3:
-            system("cls");
-            system("title Predict");
-            // properties.predict();
-            break;
-        case 4:
-            system("cls");
-            system("title Login as user");
-            cout << customer.login("k213195@nu.edu.pk", "sufiyaan");
-            getch();
-            break;
-        case 5:
-            system("cls");
-            system("title Login as admin");
-            // admin.login();
-        case 6:
-            system("cls");
-            system("title Create new account");
-            break;
-        case 7:
-            system("cls");
-            system("title About us");
-            aboutUs();
-            break;
-        case 8:
-            system("cls");
-            CursorPosition(40, 10);
-            system("title Good Bye");
-            box();
-            // Sleep(2000);
-            TextColor(7);
-            exit(0);
-            break;
-        default:
-            system("cls");
-            system("title ERROR :(");
-            CursorPosition(0, 0);
-            system("color 4F");
-            cout << "Wrong choice entered, try again!";
-            Beep(1000, 300);
-            Sleep(2000);
-            system("color 0F");
-            break;
-        }
-    }
+    
     return 0;
 }
 
@@ -291,283 +169,6 @@ string convertToString(char *a)
 {
     string s = a;
     return s;
-}
-
-void CursorPosition(int x, int y)
-{
-
-    COORD c;
-    c.X = x;
-    c.Y = y;
-
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
-}
-
-void loadingAnimation()
-{
-    int i;
-    system("cls");
-    system("color 0A");
-    CursorPosition(56, 10);
-    cout << "Loading";
-    CursorPosition(40, 12);
-    printf("[");
-    CursorPosition(78, 12);
-    printf("]");
-    CursorPosition(41, 12);
-    for (i = 1; i <= 37; i++)
-    {
-        printf("%c", 177);
-    }
-    CursorPosition(41, 12);
-    for (i = 1; i <= 37; i++)
-    {
-        Sleep(30);
-        printf("%c", 219);
-    }
-    CursorPosition(0, 0);
-    system("cls");
-    system("color 0F");
-}
-
-void TextColor(int ForgC)
-{
-    WORD wColor;
-
-    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-
-    // We use csbi for the wAttributes word.
-    if (GetConsoleScreenBufferInfo(hStdOut, &csbi))
-    {
-        // Mask out all but the background attribute, and add in the forgournd     color
-        wColor = (csbi.wAttributes & 0xF0) + (ForgC & 0x0F);
-        SetConsoleTextAttribute(hStdOut, wColor);
-    }
-}
-
-void currentDateAndTime()
-{
-    time_t t; // not a primitive datatype
-    time(&t);
-
-    cout << ctime(&t);
-}
-
-void FontSize(int x, int y)
-{
-
-    CONSOLE_FONT_INFOEX cfi;
-    cfi.cbSize = sizeof(cfi);
-    cfi.nFont = 0;
-    cfi.dwFontSize.X = x; // Width of each character in the font
-    cfi.dwFontSize.Y = y; // Height
-    cfi.FontFamily = FF_DONTCARE;
-    cfi.FontWeight = 700;                  // For normal: FW_NORMAL
-    std::wcscpy(cfi.FaceName, L"Courier"); // Choose your font
-    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
-}
-
-void box()
-{
-    CursorPosition(40, 7);
-    TextColor(1);
-    for (int i = 0; i < 40; i++)
-        cout << "-";
-    TextColor(2);
-    CursorPosition(44, 13);
-    cout << "ThankYou for using Our Service:)";
-    TextColor(1);
-    for (int i = 0; i < 11; i++)
-    {
-        CursorPosition(39, 8 + i);
-        cout << "|\n";
-    }
-    CursorPosition(40, 19);
-    for (int i = 0; i < 40; i++)
-        cout << "-";
-    for (int i = 0; i < 11; i++)
-    {
-        CursorPosition(80, 8 + i);
-        cout << "|\n";
-    }
-    cout << endl;
-}
-
-int mainMenu()
-{
-    int choice, i;
-    char ch;
-    system("color 0F");
-    system("cls");
-    system("title FAST PROPERTIES - MAIN MENU");
-    CursorPosition(0, 0);
-    TextColor(10);
-    currentDateAndTime();
-    CursorPosition(32, 3);
-    FontSize(0, 21);
-    TextColor(11);
-    cout << "\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2 FAST PROPERTIES \xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2";
-    for (i = 1; i <= 10; i++)
-    {
-        CursorPosition(31, 3 + i);
-        printf("|");
-    }
-    for (i = 1; i <= 10; i++)
-    {
-        CursorPosition(91, 3 + i);
-        printf("|");
-    }
-    for (i = 1; i <= 60; i++)
-    {
-        CursorPosition(31 + i, 14);
-        printf("-");
-    }
-    TextColor(15);
-    CursorPosition(33, 5);
-    cout << "1. Search";
-    CursorPosition(33, 6);
-    cout << "2. View all properties";
-    CursorPosition(33, 7);
-    cout << "3. Predict Price";
-    CursorPosition(33, 8);
-    cout << "4. Login as user";
-    CursorPosition(33, 9);
-    cout << "5. Login as admin";
-    CursorPosition(33, 10);
-    cout << "6. Create new account";
-    CursorPosition(33, 11);
-    cout << "7. About Us";
-    CursorPosition(33, 12);
-    cout << "8. Exit";
-    CursorPosition(32, 15);
-    cout << "Enter your choice: ";
-    fflush(stdin);
-    i = 0;
-    while (1)
-    {
-        ch = getch();
-        if (ch >= '1' && ch <= '9' && i == 0)
-        {
-            cout << ch;
-            choice = ch - '0';
-            i++;
-        }
-        else if (ch == 13 && i == 1)
-        {
-            break;
-        }
-        else if (ch == 8 && i != 0)
-        {
-            i--;
-            cout << "\b \b";
-        }
-    }
-    return choice;
-}
-
-void aboutUs()
-{
-    system("cls");
-    int j;
-    for (j = 21; j >= 0; j--)
-    {
-        if (j == 21)
-        {
-            system("color 01");
-        }
-        if (j == 19)
-        {
-            system("color 02");
-        }
-        if (j == 18)
-        {
-            system("color 03");
-        }
-        if (j == 17)
-        {
-            system("color 04");
-        }
-        if (j == 16)
-        {
-            system("color 05");
-        }
-        if (j == 15)
-        {
-            system("color 06");
-        }
-        if (j == 14)
-        {
-            system("color 07");
-        }
-        if (j == 13)
-        {
-            system("color 08");
-        }
-        if (j == 12)
-        {
-            system("color 09");
-        }
-        if (j == 11)
-        {
-            system("color 0A");
-        }
-        if (j == 10)
-        {
-            system("color 0B");
-        }
-        if (j == 9)
-        {
-            system("color 0C");
-        }
-        if (j == 8)
-        {
-            system("color 0D");
-        }
-        if (j == 7)
-        {
-            system("color 0E");
-        }
-        if (j == 6)
-        {
-            system("color 0F");
-        }
-        if (j == 5)
-        {
-            system("color 01");
-        }
-        if (j == 4)
-        {
-            system("color 02");
-        }
-        if (j == 3)
-        {
-            system("color 03");
-        }
-        if (j == 2)
-        {
-            system("color 0C");
-        }
-        if (j == 1)
-        {
-            system("color 0E");
-        }
-        if (j == 0)
-        {
-            system("color 0F");
-        }
-        system("cls");
-        CursorPosition(46, j - 1);
-        printf("THIS SYSTEM IS DESIGNED BY");
-        CursorPosition(46, j + 1);
-        printf("Sufiyaan Usmani  (21K-3195)");
-        CursorPosition(46, j + 2);
-        printf("Yousuf Ahmed     (21K-4594)");
-        CursorPosition(46, j + 3);
-        printf("Qasim Hasan      (21K-3210)");
-        CursorPosition(0, 0);
-        Sleep(600);
-    }
 }
 
 // PROPERTY
@@ -601,11 +202,6 @@ Property::Property(long long int propertyID, long int locationID, string pageUrl
     this->month = month;
     this->day = day;
     next = prev = NULL;
-}
-
-void Property::print()
-{
-    cout << setw(7) << propertyType << "  " << setw(12) << price << "  " << setw(40) << location << "  " << setw(10) << city << "  " << setw(10) << province << "  " << setw(10) << areaSqft << "  " << setw(10) << purpose << "  " << dateAdded << endl;
 }
 
 // PROPERTIES
@@ -658,23 +254,6 @@ void Properties::prepend(long long int propertyID, long int locationID, string p
         tail->next = n;
         head->prev = n;
         head = n;
-    }
-}
-
-void Properties::print()
-{
-    if (isEmpty())
-    {
-        cout << "No properties" << endl;
-    }
-    else
-    {
-        Property *temp = head;
-        do
-        {
-            temp->print();
-            temp = temp->next;
-        } while (temp != head);
     }
 }
 
@@ -783,23 +362,22 @@ void Properties::search(){
         cout << "3. Search by property ID" << endl;
         cout << "4. Go back" << endl;
         cout << "\n\nEnter your choice: ";
-        cin >> choice;
+        // cin >> choice;
         system("cls");
         fflush(stdin);
         if(choice == 1){
             cout << "Enter city: ";
-            getline(cin, str);
+            // getline(cin, str);
             searchByCity(str);
         }else if(choice == 2){
             cout << "Enter province: ";
-            getline(cin, str);
+            // getline(cin, str);
             searchByProvince(str);
         }else if(choice == 3){
             cout << "Enter property ID: ";
-            cin >> propID;
+            // cin >> propID;
             searchByPropertyID(propID);
         }else if(choice == 4){
-            loadingAnimation();
             break;
         }else{
             cout << "Wrong choice entered, please enter a correct choice" << endl;
@@ -1189,152 +767,6 @@ void Properties::generateGraphs(int year){
 
 // USER
 
-void User::setName()
-{
-    char ch;
-    int i, backspaceCount;
-    backspaceCount = i = 0;
-    cout << "Enter your full name: ";
-    while (1)
-    {
-        ch = getch();
-        if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch == 32))
-        {
-            this->name[i] = ch;
-            cout << ch;
-            i++;
-            backspaceCount++;
-        }
-        else if (ch == 8 && backspaceCount > 0)
-        {
-            cout << "\b \b";
-            i--;
-            backspaceCount--;
-        }
-        else if (ch == 13)
-        {
-            break;
-        }
-    }
-    this->name[i] = '\0';
-}
-
-void User::setAge()
-{
-    char ch, a[3];
-    int i, backspaceCount;
-    backspaceCount = i = 0;
-    cout << "Enter your age : ";
-    while (1)
-    {
-        ch = getch();
-        if (ch >= '0' && ch <= '9')
-        {
-            a[i] = ch;
-            cout << ch;
-            i++;
-            backspaceCount++;
-        }
-        else if (ch == 8 && backspaceCount > 0)
-        {
-            cout << "\b \b";
-            i--;
-            backspaceCount--;
-        }
-        else if (ch == 13 && i == 2)
-        {
-            break;
-        }
-    }
-    a[3] = '\0';
-    this->age = ((a[0] - 48) * 10) + (a[1] - 48);
-    if (this->age < 18)
-    {
-        TextColor(4);
-        cout << "\n\t\t\t\t\tAge must be greater than or equal to 18" << endl;
-        TextColor(7);
-        setAge();
-    }
-}
-
-void User::setGender()
-{
-    char ch;
-    cout << "Enter your gender (m:male, f:female): ";
-    while (1)
-    {
-        ch = getch();
-        if (ch == 'm' || ch == 'f')
-        {
-            this->gender = ch;
-            cout << ch;
-            break;
-        }
-    }
-}
-
-void User::setEmail()
-{
-    char ch;
-    int i, backspaceCount;
-    backspaceCount = i = 0;
-    cout << "Enter your email: ";
-    while (1)
-    {
-        ch = getch();
-        if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch == 32) || (ch == '@') || (ch == '.') || (ch >= '0' && ch <= '9'))
-        {
-            this->email[i] = ch;
-            cout << ch;
-            i++;
-            backspaceCount++;
-        }
-        else if (ch == 8 && backspaceCount > 0)
-        {
-            cout << "\b \b";
-            i--;
-            backspaceCount--;
-        }
-        else if (ch == 13)
-        {
-            break;
-        }
-    }
-    this->email[i] = '\0';
-}
-
-void User::setPassword()
-{
-    char ch;
-    int i, backspaceCount;
-    backspaceCount = i = 0;
-    cout << "Enter your password: ";
-    TextColor(4);
-    while (1)
-    {
-        ch = getch();
-        if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch == 32) || (ch == '@') || (ch == '.') || (ch >= '0' && ch <= '9'))
-        {
-            this->password[i] = ch;
-            cout << '*';
-            i++;
-            backspaceCount++;
-        }
-        else if (ch == 8 && backspaceCount > 0)
-        {
-            cout << "\b \b";
-            i--;
-            backspaceCount--;
-        }
-        else if (ch == 13)
-        {
-            break;
-        }
-    }
-    this->password[i] = '\0';
-    TextColor(15);
-}
-
 void User::readData()
 {
     ifstream fin;
@@ -1350,37 +782,6 @@ void User::readData()
         fin.read((char *)this, sizeof(*this));
     }
     fin.close();
-}
-
-void User::inputPassword(char pass[20])
-{
-    char ch;
-    int i, backspaceCount;
-    backspaceCount = i = 0;
-    TextColor(4);
-    while (1)
-    {
-        ch = getch();
-        if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch == 32) || (ch == '@') || (ch == '.') || (ch >= '0' && ch <= '9'))
-        {
-            pass[i] = ch;
-            cout << '*';
-            i++;
-            backspaceCount++;
-        }
-        else if (ch == 8 && backspaceCount > 0)
-        {
-            cout << "\b \b";
-            i--;
-            backspaceCount--;
-        }
-        else if (ch == 13)
-        {
-            break;
-        }
-    }
-    TextColor(15);
-    pass[i] = '\0';
 }
 
 int User::getAccountNumber()
@@ -1433,7 +834,7 @@ int Customer::generateAccountNumber()
     {
         perror("Error");
         Sleep(2000);
-        exit(1);
+        // exit(1);
     }
     else
     {
@@ -1504,348 +905,6 @@ bool Customer::login(char e[30], char pass[20])
         }
         fin.close();
         return false;
-    }
-}
-
-void Customer::viewMyInfo()
-{
-    system("color 0B");
-    system("cls");
-    system("title MY INFO");
-    TextColor(7);
-    cout << "Name: ";
-    TextColor(2);
-    cout << this->name << endl;
-    TextColor(7);
-    cout << "Account No: ";
-    TextColor(2);
-    cout << this->accountNumber << endl;
-    TextColor(7);
-    cout << "Age: ";
-    TextColor(2);
-    cout << this->age << endl;
-    TextColor(7);
-    cout << "Gender: ";
-    TextColor(2);
-    cout << (this->gender == 'm' ? "Male" : "Female") << endl;
-    TextColor(7);
-    cout << "Email: ";
-    TextColor(2);
-    cout << this->email << endl;
-    TextColor(1);
-
-    cout << "\n\t\t\t\t\tPress any key to go to your portal\n";
-    getch();
-    system("color 0F");
-}
-
-void Customer::portal()
-{
-    system("cls");
-    int customerPortalChoice, accNo;
-    accNo = accountNumber;
-    ifstream fin;
-
-    while (1)
-    {
-        fin.open("./data/customer.bank", ios::in | ios::binary);
-        if (!fin)
-        {
-            system("cls");
-            perror("Error");
-            cout << "\nProgram will exit\n";
-            Sleep(2000);
-            exit(1);
-        }
-        fin.read((char *)this, sizeof(*this));
-        while (fin.eof() == 0)
-        {
-            if (accNo == accountNumber)
-            {
-                break;
-            }
-            fin.read((char *)this, sizeof(*this));
-        }
-        fin.close();
-        customerPortalChoice = Customer::portalMenu();
-        switch (customerPortalChoice)
-        {
-        case 1:
-            Customer::viewMyInfo();
-            // customerPortal();
-            break;
-        case 2:
-            system("cls");
-            system("title SEARCH");
-            properties.search();
-            break;
-        case 3:
-            system("cls");
-            system("title VIEW ALL PROPERTIES");
-            properties.print();
-            getch();
-            break;
-        case 4:
-            system("cls");
-            system("title BUY");
-            Customer::buy();
-            break;
-        case 5:
-            system("cls");
-            system("title RENT");
-            // t.viewTransactionHistoryCustomer(accNo);
-            break;
-        case 6:
-            system("cls");
-            system("title DELETE ACCOUNT");
-            Customer::accountSetting();
-            break;
-        case 7:
-            goto customerPortalEnd;
-            break;
-        default:
-            system("cls");
-            system("title ERROR");
-            CursorPosition(0, 0);
-            system("color 4F");
-            cout << "\aWrong choice entered, try again! \a";
-            Sleep(1500);
-            system("color 0F");
-            break;
-        }
-    }
-customerPortalEnd:
-    system("cls");
-}
-
-int Customer::portalMenu()
-{
-    int choice, i;
-    char ch;
-    system("color 0F");
-    system("cls");
-    system("title MY PORTAL");
-    CursorPosition(0, 0);
-    TextColor(10);
-    currentDateAndTime();
-    CursorPosition(0, 2);
-    TextColor(9);
-    cout << "Welcome, " << this->name << endl;
-    CursorPosition(32, 5);
-    TextColor(11);
-    cout << "\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2 FAST PROPERTIES \xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2";
-    for (i = 1; i <= 14; i++)
-    {
-        CursorPosition(31, 5 + i);
-        cout << "|";
-    }
-    for (i = 1; i <= 14; i++)
-    {
-        CursorPosition(91, 5 + i);
-        cout << "|";
-    }
-    for (i = 1; i <= 60; i++)
-    {
-        CursorPosition(31 + i, 20);
-        cout << "-";
-    }
-    TextColor(15);
-    CursorPosition(33, 7);
-    cout << "1. View my information";
-    CursorPosition(33, 9);
-    cout << "2. Search";
-    CursorPosition(33, 11);
-    cout << "3. View all properties";
-    CursorPosition(33, 13);
-    cout << "4. Buy";
-    CursorPosition(33, 15);
-    cout << "5. Rent";
-    CursorPosition(33, 17);
-    cout << "6. Predict Price";
-    CursorPosition(33, 19);
-    cout << "7. Account Settings";
-    CursorPosition(33, 21);
-    cout << "8. Logout";
-    CursorPosition(32, 24);
-    TextColor(5);
-    cout << "Enter your choice: ";
-    fflush(stdin);
-    while (1)
-    {
-        ch = getch();
-        if (ch >= '1' && ch <= '7')
-        {
-            cout << ch;
-            choice = ch - '0';
-        }
-        else if (ch == 13)
-        {
-            break;
-        }
-        else if (ch == 8)
-        {
-            cout << "\b \b";
-        }
-    }
-    system("color 0F");
-    return choice;
-}
-
-void Customer::deleteAccount()
-{
-    int accNo = this->accountNumber;
-    char ch, choice;
-    system("cls");
-    TextColor(4);
-    cout << "Are you sure you want to delete your account? [y/n]: ";
-    while (1)
-    {
-        ch = getch();
-        if (ch == 'y' || ch == 'Y' || ch == 'n' || ch == 'N')
-        {
-            choice = ch;
-            cout << ch << endl;
-            break;
-        }
-    }
-    system("color 0F");
-    if (choice == 'y' || choice == 'Y')
-    {
-        ifstream fin;
-        ofstream fout;
-        fout.open("./data/temp.bank", ios::out | ios::binary);
-        fin.open("./data/customer.bank", ios::in | ios::binary);
-        if (!fin)
-        {
-            perror("Error");
-            Sleep(2000);
-            exit(1);
-        }
-        else
-        {
-            fin.read((char *)this, sizeof(*this));
-            while (fin.eof() == 0)
-            {
-                if (this->accountNumber != accNo)
-                {
-                    fout.write((char *)this, sizeof(*this));
-                }
-                fin.read((char *)this, sizeof(*this));
-            }
-        }
-        fin.close();
-        fout.close();
-        remove("./data/customer.bank");
-        rename("./data/temp.bank", "./data/customer.bank");
-        TextColor(2);
-        cout << "\n\t\t\t\t\tAccount deleted successfully" << endl;
-        Sleep(2500);
-        main();
-    }
-}
-
-void Customer::accountSetting()
-{
-    int choice;
-    while (1)
-    {
-        system("cls");
-        cout << "1. Update my email" << endl;
-        cout << "2. Update my contact number" << endl;
-        cout << "3. Change my password" << endl;
-        cout << "4. Delete my account" << endl;
-        cout << "5. Go back" << endl;
-        TextColor(1);
-        cout << endl
-             << "Enter your choice: ";
-        TextColor(7);
-        fflush(stdin);
-        cin >> choice;
-        switch (choice)
-        {
-        case 1:
-            Customer::updateEmail(this->accountNumber);
-            break;
-        case 2:
-            Customer::updateContactNumber(this->accountNumber);
-            break;
-        case 3:
-            Customer::changePassword(this->accountNumber);
-            break;
-        case 4:
-            Customer::deleteAccount();
-            break;
-        case 5:
-            goto customerAccountSettingEnd;
-            break;
-        default:
-            TextColor(4);
-            cout << "Enter a valid choice" << endl;
-            Sleep(1000);
-            TextColor(7);
-            break;
-        }
-    }
-customerAccountSettingEnd:
-    system("cls");
-}
-
-void Customer::updateInfo(int accNo)
-{
-    fstream file;
-    Customer c;
-    file.open("./data/customer.bank", ios::in | ios::out | ios::ate | ios::binary);
-    file.seekg(0);
-    file.read((char *)&c, sizeof(c));
-    while (file.eof() == 0)
-    {
-        if (c.accountNumber == accNo)
-        {
-            file.seekp(file.tellp() - sizeof(c));
-            file.write((char *)this, sizeof(*this));
-            break;
-        }
-        file.read((char *)&c, sizeof(c));
-    }
-    file.close();
-}
-
-void Customer::updateEmail(int accNo)
-{
-    setEmail();
-    system("cls");
-    cout << "Enter your password to confirm: ";
-    char passToConfirm[20];
-    inputPassword(passToConfirm);
-    if (strcmp(password, passToConfirm) == 0)
-    {
-        Customer::updateInfo(accNo);
-    }
-}
-
-void Customer::updateContactNumber(int accNo)
-{
-    system("cls");
-    cout << "Enter your password to confirm: ";
-    char passToConfirm[20];
-    inputPassword(passToConfirm);
-    if (strcmp(password, passToConfirm) == 0)
-    {
-        Customer::updateInfo(accNo);
-    }
-}
-
-void Customer::changePassword(int accNo)
-{
-    char passToConfirm[20];
-    cout << "Enter your password to confirm: ";
-    inputPassword(passToConfirm);
-    if (strcmp(password, passToConfirm) == 0)
-    {
-        system("cls");
-        system("title ENTER NEW PASSWORD");
-        setPassword();
-        Customer::updateInfo(accNo);
     }
 }
 
@@ -1923,41 +982,6 @@ void Customer::sendEmail(string email, string subject, string content){
     fout.close();
 
     system("python send_email.py");
-}
-
-// STACK
-
-Stack::Stack(){
-    top = NULL;
-}
-
-bool Stack::isEmpty(){
-    if(top == NULL){
-        return true;
-    }else{
-        return false;
-    }
-}
-
-void Stack::push(Property *p){
-    p->next = top;
-    top = p;
-}
-
-void Stack::pop(){
-    if(isEmpty()){
-        return;
-    }
-    Property *temp = top;
-    top = top->next;
-    delete temp;
-}
-
-Property *Stack::peek(){
-    if(isEmpty()){
-        return NULL;
-    }
-    return top;
 }
 
 // EMAILNODE
